@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { getCategoryLabel } from "@/lib/categories";
 
 interface CategoryFilterProps {
   categories: string[];
@@ -39,7 +40,7 @@ export function CategoryFilter({
               : "bg-gray-100 text-gray-700 hover:bg-gray-200"
           )}
         >
-          {category}
+          {getCategoryLabel(category)}
         </button>
       ))}
     </div>

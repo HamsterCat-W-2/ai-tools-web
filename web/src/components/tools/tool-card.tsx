@@ -1,5 +1,6 @@
 import { AITool } from "@/types/tool";
 import { cn } from "@/lib/utils";
+import { getCategoryLabel } from "@/lib/categories";
 
 interface ToolCardProps {
   tool: AITool;
@@ -40,7 +41,7 @@ export function ToolCard({ tool, className }: ToolCardProps) {
 
       <div className="mt-4 flex flex-wrap gap-2">
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-          {tool.category}
+          {getCategoryLabel(tool.category)}
         </span>
         {tool.tags.slice(0, 3).map((tag) => (
           <span

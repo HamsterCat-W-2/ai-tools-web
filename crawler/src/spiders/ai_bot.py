@@ -74,15 +74,15 @@ class AIBotSpider:
 
         # 根据工具名称自动分类
         category_keywords = {
-            "AI聊天": ["chat", "对话", "聊天", "助手"],
-            "AI绘画": ["绘画", "图像", "图片", "画", "midjourney", "stable diffusion"],
-            "AI编程": ["编程", "代码", "code", "copilot", "cursor"],
-            "AI写作": ["写作", "文案", "文章", "文本"],
-            "AI视频": ["视频", "video"],
-            "AI音频": ["音频", "音乐", "语音", "music"],
-            "AI设计": ["设计", "design"],
-            "AI办公": ["办公", "文档", "ppt", "表格"],
-            "AI搜索": ["搜索", "search"],
+            "chatbot": ["chat", "对话", "聊天", "助手", "chatgpt", "claude", "gemini"],
+            "image": ["绘画", "图像", "图片", "画", "midjourney", "stable diffusion", "dall-e"],
+            "coding": ["编程", "代码", "code", "copilot", "cursor", "开发"],
+            "writing": ["写作", "文案", "文章", "文本"],
+            "video": ["视频", "video", "sora"],
+            "audio": ["音频", "音乐", "语音", "music", "suno"],
+            "design": ["设计", "design", "ui"],
+            "office": ["办公", "文档", "ppt", "表格", "excel"],
+            "search": ["搜索", "search", "检索"],
         }
 
         for tool in all_tools:
@@ -94,7 +94,7 @@ class AIBotSpider:
                         tool["category"] = cat
                         break
                 if not tool["category"] or tool["category"] == "首页推荐":
-                    tool["category"] = "其他"
+                    tool["category"] = "other"
 
         # 去重
         seen_ids = set()
