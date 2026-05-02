@@ -11,10 +11,12 @@ type Tool struct {
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	URL         string    `json:"url"`
+	DetailURL   string    `json:"detail_url"`
 	Category    string    `json:"category"`
 	Icon        string    `json:"icon"`
 	Tags        []string  `json:"tags"`
 	Features    []string  `json:"features"`
+	Pricing     string    `json:"pricing"`
 	CrawledAt   time.Time `json:"crawled_at"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
@@ -27,6 +29,27 @@ type ToolsResponse struct {
 	LastUpdated string  `json:"lastUpdated"`
 }
 
+type FAQItem struct {
+	Question string `json:"question"`
+	Answer   string `json:"answer"`
+}
+
+type ToolDetail struct {
+	ToolID       string     `json:"tool_id"`
+	ContentHTML  string     `json:"content_html"`
+	Screenshots  []string   `json:"screenshots"`
+	Pricing      string     `json:"pricing"`
+	FAQ          []FAQItem  `json:"faq"`
+	LikeCount    int        `json:"like_count"`
+	CommentCount int        `json:"comment_count"`
+	PublishedAt  string     `json:"published_at"`
+}
+
+type ToolWithDetail struct {
+	Tool
+	Detail *ToolDetail `json:"detail,omitempty"`
+}
+
 // ScanTool 从数据库行扫描工具数据
 func ScanTool(row interface {
 	Scan(dest ...interface{}) error
@@ -34,14 +57,21 @@ func ScanTool(row interface {
 	var t Tool
 	var tagsJSON, featuresJSON []byte
 	var crawledAt, createdAt, updatedAt sql.NullTime
+	var detailURL, pricing sql.NullString
 
 	err := row.Scan(
-		&t.ID, &t.Name, &t.Description, &t.URL,
-		&t.Category, &t.Icon, &tagsJSON, &featuresJSON,
+		&t.ID, &t.Name, &t.Description, &t.URL, &detailURL,
+		&t.Category, &t.Icon, &tagsJSON, &featuresJSON, &pricing,
 		&crawledAt, &createdAt, &updatedAt,
 	)
 	if err != nil {
 		return nil, err
+	}
+	if detailURL.Valid {
+		t.DetailURL = detailURL.String
+	}
+	if pricing.Valid {
+		t.Pricing = pricing.String
 	}
 
 	if tagsJSON != nil {

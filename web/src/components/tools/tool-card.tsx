@@ -1,6 +1,7 @@
 import { AITool } from "@/types/tool";
 import { cn } from "@/lib/utils";
 import { getCategoryLabel } from "@/lib/categories";
+import Link from "next/link";
 
 interface ToolCardProps {
   tool: AITool;
@@ -9,10 +10,8 @@ interface ToolCardProps {
 
 export function ToolCard({ tool, className }: ToolCardProps) {
   return (
-    <a
-      href={tool.url}
-      target="_blank"
-      rel="noopener noreferrer"
+    <Link
+      href={`/tools/${tool.id}`}
       className={cn(
         "block bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg hover:border-blue-300 transition-all duration-200",
         className
@@ -67,6 +66,6 @@ export function ToolCard({ tool, className }: ToolCardProps) {
           </div>
         </div>
       )}
-    </a>
+    </Link>
   );
 }

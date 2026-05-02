@@ -12,7 +12,10 @@ import {
   upsertTool,
   upsertTools,
   deleteTool,
+  upsertToolDetail,
+  getToolDetail,
   Tool,
+  ToolDetail,
 } from "./db";
 
 const router = Router();
@@ -203,6 +206,50 @@ router.delete("/tools/:id", async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Delete tool failed:", error);
     res.status(500).json({ error: "Failed to delete tool" });
+  }
+});
+
+// ========== 工具详情接口 ==========
+
+// 获取工具详情（含基础信息）
+router.get("/tools/:id/detail", async (req: Request, res: Response) => {
+  try {
+    const tool = await getToolDetail(req.params.id);
+    if (!tool) {
+      return res.status(404).json({ error: "Tool not found" });
+    }
+    res.json(tool);
+  } catch (error) {
+    console.error("Get tool detail failed:", error);
+    res.status(500).json({ error: "Failed to get tool detail" });
+  }
+});
+
+// 创建/更新工具详情
+router.post("/tools/:id/detail", async (req: Request, res: Response) => {
+  try {
+    const detail: ToolDetail = { ...req.body, tool_id: req.params.id };
+    await upsertToolDetail(req.params.id, detail);
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Upsert tool detail failed:", error);
+    res.status(500).json({ error: "Failed to save tool detail" });
+  }
+});
+
+// 批量创建/更新工具详情
+router.post("/tools/details/batch", async (req: Request, res: Response) => {
+  try {
+    const details: ToolDetail[] = req.body.details;
+    let count = 0;
+    for (const detail of details) {
+      await upsertToolDetail(detail.tool_id, detail);
+      count++;
+    }
+    res.json({ success: true, count });
+  } catch (error) {
+    console.error("Batch upsert details failed:", error);
+    res.status(500).json({ error: "Failed to save tool details" });
   }
 });
 

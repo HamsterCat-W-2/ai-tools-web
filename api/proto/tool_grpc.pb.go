@@ -23,6 +23,7 @@ const (
 	ToolService_GetTool_FullMethodName       = "/tool.ToolService/GetTool"
 	ToolService_GetCategories_FullMethodName = "/tool.ToolService/GetCategories"
 	ToolService_SearchTools_FullMethodName   = "/tool.ToolService/SearchTools"
+	ToolService_GetToolDetail_FullMethodName = "/tool.ToolService/GetToolDetail"
 )
 
 // ToolServiceClient is the client API for ToolService service.
@@ -39,6 +40,8 @@ type ToolServiceClient interface {
 	GetCategories(ctx context.Context, in *GetCategoriesRequest, opts ...grpc.CallOption) (*GetCategoriesResponse, error)
 	// 搜索工具
 	SearchTools(ctx context.Context, in *SearchToolsRequest, opts ...grpc.CallOption) (*SearchToolsResponse, error)
+	// 获取工具详情
+	GetToolDetail(ctx context.Context, in *GetToolDetailRequest, opts ...grpc.CallOption) (*GetToolDetailResponse, error)
 }
 
 type toolServiceClient struct {
@@ -89,6 +92,16 @@ func (c *toolServiceClient) SearchTools(ctx context.Context, in *SearchToolsRequ
 	return out, nil
 }
 
+func (c *toolServiceClient) GetToolDetail(ctx context.Context, in *GetToolDetailRequest, opts ...grpc.CallOption) (*GetToolDetailResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetToolDetailResponse)
+	err := c.cc.Invoke(ctx, ToolService_GetToolDetail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ToolServiceServer is the server API for ToolService service.
 // All implementations must embed UnimplementedToolServiceServer
 // for forward compatibility.
@@ -103,6 +116,8 @@ type ToolServiceServer interface {
 	GetCategories(context.Context, *GetCategoriesRequest) (*GetCategoriesResponse, error)
 	// 搜索工具
 	SearchTools(context.Context, *SearchToolsRequest) (*SearchToolsResponse, error)
+	// 获取工具详情
+	GetToolDetail(context.Context, *GetToolDetailRequest) (*GetToolDetailResponse, error)
 	mustEmbedUnimplementedToolServiceServer()
 }
 
@@ -124,6 +139,9 @@ func (UnimplementedToolServiceServer) GetCategories(context.Context, *GetCategor
 }
 func (UnimplementedToolServiceServer) SearchTools(context.Context, *SearchToolsRequest) (*SearchToolsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method SearchTools not implemented")
+}
+func (UnimplementedToolServiceServer) GetToolDetail(context.Context, *GetToolDetailRequest) (*GetToolDetailResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetToolDetail not implemented")
 }
 func (UnimplementedToolServiceServer) mustEmbedUnimplementedToolServiceServer() {}
 func (UnimplementedToolServiceServer) testEmbeddedByValue()                     {}
@@ -218,6 +236,24 @@ func _ToolService_SearchTools_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ToolService_GetToolDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetToolDetailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ToolServiceServer).GetToolDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ToolService_GetToolDetail_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ToolServiceServer).GetToolDetail(ctx, req.(*GetToolDetailRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ToolService_ServiceDesc is the grpc.ServiceDesc for ToolService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -240,6 +276,10 @@ var ToolService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SearchTools",
 			Handler:    _ToolService_SearchTools_Handler,
+		},
+		{
+			MethodName: "GetToolDetail",
+			Handler:    _ToolService_GetToolDetail_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

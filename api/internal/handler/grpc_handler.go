@@ -35,10 +35,12 @@ func (s *ToolServer) GetTools(ctx context.Context, req *pb.GetToolsRequest) (*pb
 			Name:        tool.Name,
 			Description: tool.Description,
 			Url:         tool.URL,
+			DetailUrl:   tool.DetailURL,
 			Category:    tool.Category,
 			Icon:        tool.Icon,
 			Tags:        tool.Tags,
 			Features:    tool.Features,
+			Pricing:     tool.Pricing,
 			CrawledAt:   tool.CrawledAt.Format("2006-01-02T15:04:05Z"),
 			CreatedAt:   tool.CreatedAt.Format("2006-01-02T15:04:05Z"),
 			UpdatedAt:   tool.UpdatedAt.Format("2006-01-02T15:04:05Z"),
@@ -65,10 +67,12 @@ func (s *ToolServer) GetTool(ctx context.Context, req *pb.GetToolRequest) (*pb.T
 		Name:        tool.Name,
 		Description: tool.Description,
 		Url:         tool.URL,
+		DetailUrl:   tool.DetailURL,
 		Category:    tool.Category,
 		Icon:        tool.Icon,
 		Tags:        tool.Tags,
 		Features:    tool.Features,
+		Pricing:     tool.Pricing,
 		CrawledAt:   tool.CrawledAt.Format("2006-01-02T15:04:05Z"),
 		CreatedAt:   tool.CreatedAt.Format("2006-01-02T15:04:05Z"),
 		UpdatedAt:   tool.UpdatedAt.Format("2006-01-02T15:04:05Z"),
@@ -101,10 +105,12 @@ func (s *ToolServer) SearchTools(ctx context.Context, req *pb.SearchToolsRequest
 			Name:        tool.Name,
 			Description: tool.Description,
 			Url:         tool.URL,
+			DetailUrl:   tool.DetailURL,
 			Category:    tool.Category,
 			Icon:        tool.Icon,
 			Tags:        tool.Tags,
 			Features:    tool.Features,
+			Pricing:     tool.Pricing,
 			CrawledAt:   tool.CrawledAt.Format("2006-01-02T15:04:05Z"),
 			CreatedAt:   tool.CreatedAt.Format("2006-01-02T15:04:05Z"),
 			UpdatedAt:   tool.UpdatedAt.Format("2006-01-02T15:04:05Z"),
@@ -115,4 +121,54 @@ func (s *ToolServer) SearchTools(ctx context.Context, req *pb.SearchToolsRequest
 		Tools: pbTools,
 		Total: int32(len(tools)),
 	}, nil
+}
+
+// GetToolDetail 获取工具详情
+func (s *ToolServer) GetToolDetail(ctx context.Context, req *pb.GetToolDetailRequest) (*pb.GetToolDetailResponse, error) {
+	td, err := repository.GetToolDetailByID(req.GetId())
+	if err != nil {
+		return nil, status.Errorf(codes.NotFound, "Tool not found: %v", err)
+	}
+
+	pbTool := &pb.Tool{
+		Id:          td.ID,
+		Name:        td.Name,
+		Description: td.Description,
+		Url:         td.URL,
+		DetailUrl:   td.DetailURL,
+		Category:    td.Category,
+		Icon:        td.Icon,
+		Tags:        td.Tags,
+		Features:    td.Features,
+		Pricing:     td.Pricing,
+		CrawledAt:   td.CrawledAt.Format("2006-01-02T15:04:05Z"),
+		CreatedAt:   td.CreatedAt.Format("2006-01-02T15:04:05Z"),
+		UpdatedAt:   td.UpdatedAt.Format("2006-01-02T15:04:05Z"),
+	}
+
+	resp := &pb.GetToolDetailResponse{
+		Tool: pbTool,
+	}
+
+	if td.Detail != nil {
+		pbFAQ := make([]*pb.FAQItem, len(td.Detail.FAQ))
+		for i, f := range td.Detail.FAQ {
+			pbFAQ[i] = &pb.FAQItem{
+				Question: f.Question,
+				Answer:   f.Answer,
+			}
+		}
+		resp.Detail = &pb.ToolDetail{
+			ToolId:       td.Detail.ToolID,
+			ContentHtml:  td.Detail.ContentHTML,
+			Screenshots:  td.Detail.Screenshots,
+			Pricing:      td.Detail.Pricing,
+			Faq:          pbFAQ,
+			LikeCount:    int32(td.Detail.LikeCount),
+			CommentCount: int32(td.Detail.CommentCount),
+			PublishedAt:  td.Detail.PublishedAt,
+		}
+	}
+
+	return resp, nil
 }

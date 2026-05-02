@@ -36,6 +36,8 @@ type Tool struct {
 	CrawledAt     string                 `protobuf:"bytes,9,opt,name=crawled_at,json=crawledAt,proto3" json:"crawled_at,omitempty"`
 	CreatedAt     string                 `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	UpdatedAt     string                 `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	DetailUrl     string                 `protobuf:"bytes,12,opt,name=detail_url,json=detailUrl,proto3" json:"detail_url,omitempty"`
+	Pricing       string                 `protobuf:"bytes,13,opt,name=pricing,proto3" json:"pricing,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -143,6 +145,20 @@ func (x *Tool) GetCreatedAt() string {
 func (x *Tool) GetUpdatedAt() string {
 	if x != nil {
 		return x.UpdatedAt
+	}
+	return ""
+}
+
+func (x *Tool) GetDetailUrl() string {
+	if x != nil {
+		return x.DetailUrl
+	}
+	return ""
+}
+
+func (x *Tool) GetPricing() string {
+	if x != nil {
+		return x.Pricing
 	}
 	return ""
 }
@@ -486,11 +502,263 @@ func (x *SearchToolsResponse) GetTotal() int32 {
 	return 0
 }
 
+// FAQ 条目
+type FAQItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Question      string                 `protobuf:"bytes,1,opt,name=question,proto3" json:"question,omitempty"`
+	Answer        string                 `protobuf:"bytes,2,opt,name=answer,proto3" json:"answer,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FAQItem) Reset() {
+	*x = FAQItem{}
+	mi := &file_proto_tool_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FAQItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FAQItem) ProtoMessage() {}
+
+func (x *FAQItem) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_tool_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FAQItem.ProtoReflect.Descriptor instead.
+func (*FAQItem) Descriptor() ([]byte, []int) {
+	return file_proto_tool_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *FAQItem) GetQuestion() string {
+	if x != nil {
+		return x.Question
+	}
+	return ""
+}
+
+func (x *FAQItem) GetAnswer() string {
+	if x != nil {
+		return x.Answer
+	}
+	return ""
+}
+
+// 工具详情信息
+type ToolDetail struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ToolId        string                 `protobuf:"bytes,1,opt,name=tool_id,json=toolId,proto3" json:"tool_id,omitempty"`
+	ContentHtml   string                 `protobuf:"bytes,2,opt,name=content_html,json=contentHtml,proto3" json:"content_html,omitempty"`
+	Screenshots   []string               `protobuf:"bytes,3,rep,name=screenshots,proto3" json:"screenshots,omitempty"`
+	Pricing       string                 `protobuf:"bytes,4,opt,name=pricing,proto3" json:"pricing,omitempty"`
+	Faq           []*FAQItem             `protobuf:"bytes,5,rep,name=faq,proto3" json:"faq,omitempty"`
+	LikeCount     int32                  `protobuf:"varint,6,opt,name=like_count,json=likeCount,proto3" json:"like_count,omitempty"`
+	CommentCount  int32                  `protobuf:"varint,7,opt,name=comment_count,json=commentCount,proto3" json:"comment_count,omitempty"`
+	PublishedAt   string                 `protobuf:"bytes,8,opt,name=published_at,json=publishedAt,proto3" json:"published_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ToolDetail) Reset() {
+	*x = ToolDetail{}
+	mi := &file_proto_tool_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ToolDetail) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ToolDetail) ProtoMessage() {}
+
+func (x *ToolDetail) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_tool_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ToolDetail.ProtoReflect.Descriptor instead.
+func (*ToolDetail) Descriptor() ([]byte, []int) {
+	return file_proto_tool_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *ToolDetail) GetToolId() string {
+	if x != nil {
+		return x.ToolId
+	}
+	return ""
+}
+
+func (x *ToolDetail) GetContentHtml() string {
+	if x != nil {
+		return x.ContentHtml
+	}
+	return ""
+}
+
+func (x *ToolDetail) GetScreenshots() []string {
+	if x != nil {
+		return x.Screenshots
+	}
+	return nil
+}
+
+func (x *ToolDetail) GetPricing() string {
+	if x != nil {
+		return x.Pricing
+	}
+	return ""
+}
+
+func (x *ToolDetail) GetFaq() []*FAQItem {
+	if x != nil {
+		return x.Faq
+	}
+	return nil
+}
+
+func (x *ToolDetail) GetLikeCount() int32 {
+	if x != nil {
+		return x.LikeCount
+	}
+	return 0
+}
+
+func (x *ToolDetail) GetCommentCount() int32 {
+	if x != nil {
+		return x.CommentCount
+	}
+	return 0
+}
+
+func (x *ToolDetail) GetPublishedAt() string {
+	if x != nil {
+		return x.PublishedAt
+	}
+	return ""
+}
+
+// 获取工具详情请求
+type GetToolDetailRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetToolDetailRequest) Reset() {
+	*x = GetToolDetailRequest{}
+	mi := &file_proto_tool_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetToolDetailRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetToolDetailRequest) ProtoMessage() {}
+
+func (x *GetToolDetailRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_tool_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetToolDetailRequest.ProtoReflect.Descriptor instead.
+func (*GetToolDetailRequest) Descriptor() ([]byte, []int) {
+	return file_proto_tool_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *GetToolDetailRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+// 获取工具详情响应
+type GetToolDetailResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Tool          *Tool                  `protobuf:"bytes,1,opt,name=tool,proto3" json:"tool,omitempty"`
+	Detail        *ToolDetail            `protobuf:"bytes,2,opt,name=detail,proto3" json:"detail,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetToolDetailResponse) Reset() {
+	*x = GetToolDetailResponse{}
+	mi := &file_proto_tool_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetToolDetailResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetToolDetailResponse) ProtoMessage() {}
+
+func (x *GetToolDetailResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_tool_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetToolDetailResponse.ProtoReflect.Descriptor instead.
+func (*GetToolDetailResponse) Descriptor() ([]byte, []int) {
+	return file_proto_tool_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *GetToolDetailResponse) GetTool() *Tool {
+	if x != nil {
+		return x.Tool
+	}
+	return nil
+}
+
+func (x *GetToolDetailResponse) GetDetail() *ToolDetail {
+	if x != nil {
+		return x.Detail
+	}
+	return nil
+}
+
 var File_proto_tool_proto protoreflect.FileDescriptor
 
 const file_proto_tool_proto_rawDesc = "" +
 	"\n" +
-	"\x10proto/tool.proto\x12\x04tool\x1a\x1cgoogle/api/annotations.proto\"\x9b\x02\n" +
+	"\x10proto/tool.proto\x12\x04tool\x1a\x1cgoogle/api/annotations.proto\"\xd4\x02\n" +
 	"\x04Tool\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
@@ -506,7 +774,10 @@ const file_proto_tool_proto_rawDesc = "" +
 	"created_at\x18\n" +
 	" \x01(\tR\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\v \x01(\tR\tupdatedAt\"-\n" +
+	"updated_at\x18\v \x01(\tR\tupdatedAt\x12\x1d\n" +
+	"\n" +
+	"detail_url\x18\f \x01(\tR\tdetailUrl\x12\x18\n" +
+	"\apricing\x18\r \x01(\tR\apricing\"-\n" +
 	"\x0fGetToolsRequest\x12\x1a\n" +
 	"\bcategory\x18\x01 \x01(\tR\bcategory\"\x8d\x01\n" +
 	"\x10GetToolsResponse\x12 \n" +
@@ -529,14 +800,35 @@ const file_proto_tool_proto_rawDesc = "" +
 	"\x13SearchToolsResponse\x12 \n" +
 	"\x05tools\x18\x01 \x03(\v2\n" +
 	".tool.ToolR\x05tools\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x05R\x05total2\xe4\x02\n" +
+	"\x05total\x18\x02 \x01(\x05R\x05total\"=\n" +
+	"\aFAQItem\x12\x1a\n" +
+	"\bquestion\x18\x01 \x01(\tR\bquestion\x12\x16\n" +
+	"\x06answer\x18\x02 \x01(\tR\x06answer\"\x8c\x02\n" +
+	"\n" +
+	"ToolDetail\x12\x17\n" +
+	"\atool_id\x18\x01 \x01(\tR\x06toolId\x12!\n" +
+	"\fcontent_html\x18\x02 \x01(\tR\vcontentHtml\x12 \n" +
+	"\vscreenshots\x18\x03 \x03(\tR\vscreenshots\x12\x18\n" +
+	"\apricing\x18\x04 \x01(\tR\apricing\x12\x1f\n" +
+	"\x03faq\x18\x05 \x03(\v2\r.tool.FAQItemR\x03faq\x12\x1d\n" +
+	"\n" +
+	"like_count\x18\x06 \x01(\x05R\tlikeCount\x12#\n" +
+	"\rcomment_count\x18\a \x01(\x05R\fcommentCount\x12!\n" +
+	"\fpublished_at\x18\b \x01(\tR\vpublishedAt\"&\n" +
+	"\x14GetToolDetailRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"a\n" +
+	"\x15GetToolDetailResponse\x12\x1e\n" +
+	"\x04tool\x18\x01 \x01(\v2\n" +
+	".tool.ToolR\x04tool\x12(\n" +
+	"\x06detail\x18\x02 \x01(\v2\x10.tool.ToolDetailR\x06detail2\xce\x03\n" +
 	"\vToolService\x12M\n" +
 	"\bGetTools\x12\x15.tool.GetToolsRequest\x1a\x16.tool.GetToolsResponse\"\x12\x82\xd3\xe4\x93\x02\f\x12\n" +
 	"/api/tools\x12D\n" +
 	"\aGetTool\x12\x14.tool.GetToolRequest\x1a\n" +
 	".tool.Tool\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/api/tools/{id}\x12a\n" +
 	"\rGetCategories\x12\x1a.tool.GetCategoriesRequest\x1a\x1b.tool.GetCategoriesResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/api/categories\x12]\n" +
-	"\vSearchTools\x12\x18.tool.SearchToolsRequest\x1a\x19.tool.SearchToolsResponse\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/api/tools/searchB\x14Z\x12ai-tools-api/protob\x06proto3"
+	"\vSearchTools\x12\x18.tool.SearchToolsRequest\x1a\x19.tool.SearchToolsResponse\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/api/tools/search\x12h\n" +
+	"\rGetToolDetail\x12\x1a.tool.GetToolDetailRequest\x1a\x1b.tool.GetToolDetailResponse\"\x1e\x82\xd3\xe4\x93\x02\x18\x12\x16/api/tools/{id}/detailB\x14Z\x12ai-tools-api/protob\x06proto3"
 
 var (
 	file_proto_tool_proto_rawDescOnce sync.Once
@@ -550,7 +842,7 @@ func file_proto_tool_proto_rawDescGZIP() []byte {
 	return file_proto_tool_proto_rawDescData
 }
 
-var file_proto_tool_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_proto_tool_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_proto_tool_proto_goTypes = []any{
 	(*Tool)(nil),                  // 0: tool.Tool
 	(*GetToolsRequest)(nil),       // 1: tool.GetToolsRequest
@@ -560,23 +852,32 @@ var file_proto_tool_proto_goTypes = []any{
 	(*GetCategoriesResponse)(nil), // 5: tool.GetCategoriesResponse
 	(*SearchToolsRequest)(nil),    // 6: tool.SearchToolsRequest
 	(*SearchToolsResponse)(nil),   // 7: tool.SearchToolsResponse
+	(*FAQItem)(nil),               // 8: tool.FAQItem
+	(*ToolDetail)(nil),            // 9: tool.ToolDetail
+	(*GetToolDetailRequest)(nil),  // 10: tool.GetToolDetailRequest
+	(*GetToolDetailResponse)(nil), // 11: tool.GetToolDetailResponse
 }
 var file_proto_tool_proto_depIdxs = []int32{
-	0, // 0: tool.GetToolsResponse.tools:type_name -> tool.Tool
-	0, // 1: tool.SearchToolsResponse.tools:type_name -> tool.Tool
-	1, // 2: tool.ToolService.GetTools:input_type -> tool.GetToolsRequest
-	3, // 3: tool.ToolService.GetTool:input_type -> tool.GetToolRequest
-	4, // 4: tool.ToolService.GetCategories:input_type -> tool.GetCategoriesRequest
-	6, // 5: tool.ToolService.SearchTools:input_type -> tool.SearchToolsRequest
-	2, // 6: tool.ToolService.GetTools:output_type -> tool.GetToolsResponse
-	0, // 7: tool.ToolService.GetTool:output_type -> tool.Tool
-	5, // 8: tool.ToolService.GetCategories:output_type -> tool.GetCategoriesResponse
-	7, // 9: tool.ToolService.SearchTools:output_type -> tool.SearchToolsResponse
-	6, // [6:10] is the sub-list for method output_type
-	2, // [2:6] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	0,  // 0: tool.GetToolsResponse.tools:type_name -> tool.Tool
+	0,  // 1: tool.SearchToolsResponse.tools:type_name -> tool.Tool
+	8,  // 2: tool.ToolDetail.faq:type_name -> tool.FAQItem
+	0,  // 3: tool.GetToolDetailResponse.tool:type_name -> tool.Tool
+	9,  // 4: tool.GetToolDetailResponse.detail:type_name -> tool.ToolDetail
+	1,  // 5: tool.ToolService.GetTools:input_type -> tool.GetToolsRequest
+	3,  // 6: tool.ToolService.GetTool:input_type -> tool.GetToolRequest
+	4,  // 7: tool.ToolService.GetCategories:input_type -> tool.GetCategoriesRequest
+	6,  // 8: tool.ToolService.SearchTools:input_type -> tool.SearchToolsRequest
+	10, // 9: tool.ToolService.GetToolDetail:input_type -> tool.GetToolDetailRequest
+	2,  // 10: tool.ToolService.GetTools:output_type -> tool.GetToolsResponse
+	0,  // 11: tool.ToolService.GetTool:output_type -> tool.Tool
+	5,  // 12: tool.ToolService.GetCategories:output_type -> tool.GetCategoriesResponse
+	7,  // 13: tool.ToolService.SearchTools:output_type -> tool.SearchToolsResponse
+	11, // 14: tool.ToolService.GetToolDetail:output_type -> tool.GetToolDetailResponse
+	10, // [10:15] is the sub-list for method output_type
+	5,  // [5:10] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_proto_tool_proto_init() }
@@ -590,7 +891,7 @@ func file_proto_tool_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_tool_proto_rawDesc), len(file_proto_tool_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

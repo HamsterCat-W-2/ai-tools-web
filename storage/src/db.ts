@@ -24,13 +24,30 @@ export interface Tool {
   name: string;
   description: string;
   url: string;
+  detail_url?: string;
   category: string;
   icon: string;
   tags: string[];
   features: string[];
+  pricing?: string;
   crawled_at: string;
   created_at?: string;
   updated_at?: string;
+}
+
+export interface ToolDetail {
+  tool_id: string;
+  content_html: string;
+  screenshots: string[];
+  pricing: string;
+  faq: { question: string; answer: string }[];
+  like_count: number;
+  comment_count: number;
+  published_at: string;
+}
+
+export interface ToolWithDetail extends Tool {
+  detail?: ToolDetail;
 }
 
 export async function upsertTool(tool: Tool): Promise<void> {
@@ -124,4 +141,89 @@ export async function getToolsCount(): Promise<number> {
 export async function deleteTool(id: string): Promise<void> {
   const pool = getPool();
   await pool.execute("DELETE FROM tools WHERE id = ?", [id]);
+}
+
+// ========== Tool Detail ==========
+
+export async function upsertToolDetail(
+  toolId: string,
+  detail: ToolDetail
+): Promise<void> {
+  const pool = getPool();
+  const sql = `
+    INSERT INTO tool_details (tool_id, content_html, screenshots, pricing, faq, like_count, comment_count, published_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE
+      content_html = VALUES(content_html),
+      screenshots = VALUES(screenshots),
+      pricing = VALUES(pricing),
+      faq = VALUES(faq),
+      like_count = VALUES(like_count),
+      comment_count = VALUES(comment_count),
+      published_at = VALUES(published_at)
+  `;
+  await pool.execute(sql, [
+    toolId,
+    detail.content_html,
+    JSON.stringify(detail.screenshots),
+    detail.pricing,
+    JSON.stringify(detail.faq),
+    detail.like_count,
+    detail.comment_count,
+    detail.published_at || null,
+  ]);
+}
+
+export async function getToolDetail(
+  toolId: string
+): Promise<ToolWithDetail | null> {
+  const pool = getPool();
+  const sql = `
+    SELECT t.*, d.content_html, d.screenshots, d.pricing as detail_pricing,
+           d.faq, d.like_count, d.comment_count, d.published_at
+    FROM tools t
+    LEFT JOIN tool_details d ON t.id = d.tool_id
+    WHERE t.id = ?
+  `;
+  const [rows] = await pool.execute(sql, [toolId]);
+  const tools = rows as any[];
+  if (tools.length === 0) return null;
+
+  const row = tools[0];
+  const tool: ToolWithDetail = {
+    id: row.id,
+    name: row.name,
+    description: row.description,
+    url: row.url,
+    detail_url: row.detail_url,
+    category: row.category,
+    icon: row.icon,
+    tags: typeof row.tags === "string" ? JSON.parse(row.tags) : row.tags || [],
+    features:
+      typeof row.features === "string"
+        ? JSON.parse(row.features)
+        : row.features || [],
+    pricing: row.pricing,
+    crawled_at: row.crawled_at,
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+  };
+
+  if (row.content_html) {
+    tool.detail = {
+      tool_id: row.id,
+      content_html: row.content_html,
+      screenshots:
+        typeof row.screenshots === "string"
+          ? JSON.parse(row.screenshots)
+          : row.screenshots || [],
+      pricing: row.detail_pricing || "",
+      faq: typeof row.faq === "string" ? JSON.parse(row.faq) : row.faq || [],
+      like_count: row.like_count || 0,
+      comment_count: row.comment_count || 0,
+      published_at: row.published_at || "",
+    };
+  }
+
+  return tool;
 }

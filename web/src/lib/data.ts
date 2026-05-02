@@ -1,4 +1,4 @@
-import { ToolsData, AITool } from "@/types/tool";
+import { ToolsData, AITool, ToolWithDetail } from "@/types/tool";
 
 const API_URL = process.env.API_URL || "http://localhost:8081";
 
@@ -72,5 +72,22 @@ export async function searchTools(keyword: string): Promise<AITool[]> {
   } catch (error) {
     console.error("Failed to search tools:", error);
     return [];
+  }
+}
+
+export async function getToolDetail(id: string): Promise<ToolWithDetail | null> {
+  try {
+    const response = await fetch(`${API_URL}/api/tools/${id}/detail`, {
+      cache: "no-store",
+    });
+    if (!response.ok) {
+      return null;
+    }
+    const data = await response.json();
+    // API 返回 {tool: {...}, detail: {...}}，合并为扁平结构
+    return { ...data.tool, detail: data.detail } as ToolWithDetail;
+  } catch (error) {
+    console.error("Failed to load tool detail:", error);
+    return null;
   }
 }

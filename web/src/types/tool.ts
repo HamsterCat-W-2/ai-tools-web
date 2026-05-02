@@ -3,12 +3,33 @@ export interface AITool {
   name: string;
   description: string;
   url: string;
+  detail_url?: string;
   category: string;
   tags: string[];
   icon: string;
-  price: string;
+  pricing?: string;
   features: string[];
   crawledAt: string;
+}
+
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+export interface ToolDetail {
+  toolId: string;
+  contentHtml: string;
+  screenshots: string[];
+  pricing: string;
+  faq: FAQItem[];
+  likeCount: number;
+  commentCount: number;
+  publishedAt: string;
+}
+
+export interface ToolWithDetail extends AITool {
+  detail?: ToolDetail;
 }
 
 export interface ToolsData {

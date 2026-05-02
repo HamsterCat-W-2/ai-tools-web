@@ -32,6 +32,12 @@ service ToolService {
       get: "/api/tools/search"
     };
   }
+  // 获取工具详情
+  rpc GetToolDetail(GetToolDetailRequest) returns (GetToolDetailResponse) {
+    option (google.api.http) = {
+      get: "/api/tools/{id}/detail"
+    };
+  }
 }
 
 // 工具信息
@@ -47,6 +53,8 @@ message Tool {
   string crawled_at = 9;
   string created_at = 10;
   string updated_at = 11;
+  string detail_url = 12;
+  string pricing = 13;
 }
 
 // 获取工具列表请求
@@ -84,4 +92,33 @@ message SearchToolsRequest {
 message SearchToolsResponse {
   repeated Tool tools = 1;
   int32 total = 2;
+}
+
+// FAQ 条目
+message FAQItem {
+  string question = 1;
+  string answer = 2;
+}
+
+// 工具详情信息
+message ToolDetail {
+  string tool_id = 1;
+  string content_html = 2;
+  repeated string screenshots = 3;
+  string pricing = 4;
+  repeated FAQItem faq = 5;
+  int32 like_count = 6;
+  int32 comment_count = 7;
+  string published_at = 8;
+}
+
+// 获取工具详情请求
+message GetToolDetailRequest {
+  string id = 1;
+}
+
+// 获取工具详情响应
+message GetToolDetailResponse {
+  Tool tool = 1;
+  ToolDetail detail = 2;
 }
