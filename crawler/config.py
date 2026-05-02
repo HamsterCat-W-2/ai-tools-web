@@ -16,14 +16,17 @@ REQUEST_HEADERS = {
 REQUEST_TIMEOUT = 30
 REQUEST_DELAY = 1  # 请求间隔（秒）
 
-# 分类映射（根据网站实际分类调整）
+# 存储服务配置
+STORAGE_SERVICE_URL = "http://localhost:9100"
+
+# 分类映射
 CATEGORY_MAPPING = {
-    "ai-chat": "AI聊天",
-    "ai-writing": "AI写作",
-    "ai-image": "AI绘画",
-    "ai-video": "AI视频",
-    "ai-audio": "AI音频",
-    "ai-code": "AI编程",
-    "ai-design": "AI设计",
-    "ai-office": "AI办公",
+    "ai-chat": "chatbot",
+    "ai-writing": "writing",
+    "ai-image": "image",
+    "ai-video": "video",
+    "ai-audio": "audio",
+    "ai-code": "coding",
+    "ai-design": "design",
+    "ai-office": "office",
 }

@@ -20,4 +20,13 @@ export const config = {
   publicUrl:
     process.env.MINIO_PUBLIC_URL ||
     `http://${process.env.MINIO_ENDPOINT || "localhost"}:${process.env.MINIO_PORT || "9000"}`,
+
+  // MySQL 配置
+  mysql: {
+    host: process.env.MYSQL_HOST || "localhost",
+    port: parseInt(process.env.MYSQL_PORT || "3306"),
+    database: process.env.MYSQL_DATABASE || "ai_tools",
+    user: process.env.MYSQL_USER || "ai_tools",
+    password: process.env.MYSQL_PASSWORD || "ai_tools123",
+  },
 };
