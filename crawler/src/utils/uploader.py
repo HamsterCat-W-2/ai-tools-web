@@ -58,22 +58,44 @@ def upload_icon(icon_url: str, tool_id: str) -> Optional[str]:
         return None
 
 
+def _transform_tool(tool: dict) -> dict:
+    """转换爬虫输出字段名为数据库字段名"""
+    return {
+        "id": tool.get("id", ""),
+        "name": tool.get("name", ""),
+        "description": tool.get("description", ""),
+        "url": tool.get("url", ""),
+        "category": tool.get("category", ""),
+        "icon": tool.get("icon", ""),
+        "tags": tool.get("tags", []),
+        "features": tool.get("features", []),
+        "crawled_at": tool.get("crawledAt", ""),
+    }
+
+
 def save_tools_to_db(tools: list) -> bool:
     """保存工具数据到数据库
 
     Args:
-        tools: 工具列表
+        tools: 工具列表（爬虫原始格式）
 
     Returns:
         是否成功
     """
     try:
+        transformed = [_transform_tool(t) for t in tools]
         response = requests.post(
             f"{STORAGE_SERVICE_URL}/api/storage/tools/batch",
-            json={"tools": tools},
-            timeout=30,
+            json={"tools": transformed},
+            timeout=60,
         )
-        return response.status_code == 200
+        if response.status_code == 200:
+            result = response.json()
+            print(f"  服务器返回: {result}")
+            return True
+        else:
+            print(f"  保存失败: {response.status_code} {response.text}")
+            return False
     except Exception as e:
         print(f"保存到数据库失败: {e}")
         return False
