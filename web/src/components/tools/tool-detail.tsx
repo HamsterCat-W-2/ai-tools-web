@@ -139,7 +139,11 @@ export function ToolDetailPage({ tool }: ToolDetailProps) {
                           : detail.contentHtml;
                       return blocks.map(
                         (
-                          block: { type: string; content: string },
+                          block: {
+                            type: string;
+                            style?: string;
+                            content: string;
+                          },
                           i: number
                         ) =>
                           block.type === "image" ? (
@@ -150,6 +154,13 @@ export function ToolDetailPage({ tool }: ToolDetailProps) {
                               className="rounded-lg border border-gray-100 w-full"
                               loading="lazy"
                             />
+                          ) : block.style === "heading" ? (
+                            <h3
+                              key={i}
+                              className="text-base font-semibold text-gray-900 mt-6 first:mt-0"
+                            >
+                              {block.content}
+                            </h3>
                           ) : (
                             <p
                               key={i}

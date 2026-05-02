@@ -77,22 +77,36 @@ class DetailParser:
 
         blocks = []
         screenshots = []
+        skip_faq = False
 
         for child in content_el.children:
             if not hasattr(child, "name") or not child.name:
                 continue
 
+            # 跳过 FAQ 区域
+            if child.name == "div" and child.get("id") == "accordion":
+                skip_faq = False
+                continue
+
+            # 检测到 FAQ 标题后，跳过后续所有内容
+            if skip_faq:
+                continue
+
             # 标题
             if child.name in ("h2", "h3", "h4"):
                 text = child.get_text(strip=True)
+                # 检测 FAQ 标题，标记跳过后续内容
+                if text and ("常见问题" in text or "FAQ" in text.upper()):
+                    skip_faq = True
+                    continue
                 if text:
-                    blocks.append({"type": "text", "content": text})
+                    blocks.append({"type": "text", "style": "heading", "content": text})
 
             # 段落
             elif child.name == "p":
                 text = child.get_text(strip=True)
                 if text:
-                    blocks.append({"type": "text", "content": text})
+                    blocks.append({"type": "text", "style": "body", "content": text})
 
             # 图片
             elif child.name == "img":
@@ -107,10 +121,13 @@ class DetailParser:
                 for li in child.select("li"):
                     text = li.get_text(strip=True)
                     if text:
-                        blocks.append({"type": "text", "content": text})
+                        blocks.append({"type": "text", "style": "body", "content": text})
 
             # div（可能嵌套了内容）
             elif child.name == "div":
+                # 也跳过嵌套的 accordion
+                if child.select_one("#accordion"):
+                    continue
                 for el in child.find_all(["h2", "h3", "p", "img", "li"]):
                     if el.name == "img":
                         img_url = el.get("data-src") or el.get("src", "")
@@ -121,7 +138,8 @@ class DetailParser:
                     else:
                         text = el.get_text(strip=True)
                         if text:
-                            blocks.append({"type": "text", "content": text})
+                            style = "heading" if el.name in ("h2", "h3", "h4") else "body"
+                            blocks.append({"type": "text", "style": style, "content": text})
 
         return blocks, screenshots
 
