@@ -11,11 +11,15 @@ from src.spiders.detail_spider import DetailSpider
 from src.utils.uploader import upload_screenshot, save_tool_detail
 
 
-def replace_image_urls(html: str, url_map: dict) -> str:
-    """替换 HTML 中的图片地址为 MinIO 地址"""
-    for old_url, new_url in url_map.items():
-        html = html.replace(old_url, new_url)
-    return html
+def replace_image_urls(blocks: list, url_map: dict) -> list:
+    """替换 content_blocks 中的图片地址为 MinIO 地址"""
+    result = []
+    for block in blocks:
+        if block["type"] == "image" and block["content"] in url_map:
+            result.append({"type": "image", "content": url_map[block["content"]]})
+        else:
+            result.append(block)
+    return result
 
 
 def main():
@@ -61,7 +65,7 @@ def main():
             else:
                 new_screenshots.append(img_url)
 
-        # 替换 HTML 中的图片地址
+        # 替换 content_blocks 中的图片地址
         detail["content_html"] = replace_image_urls(detail["content_html"], url_map)
         detail["screenshots"] = new_screenshots
 

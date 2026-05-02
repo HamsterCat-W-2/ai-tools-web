@@ -19,7 +19,7 @@ class DetailParser:
             解析后的详情数据字典
         """
         try:
-            soup = BeautifulSoup(html, "html.parser")
+            soup = BeautifulSoup(html, "lxml")
 
             # 价格信息
             pricing = self._extract_pricing(soup)
@@ -70,21 +70,60 @@ class DetailParser:
         return [el.get_text(strip=True) for el in tag_els if el.get_text(strip=True)]
 
     def _extract_content(self, soup: BeautifulSoup) -> tuple:
-        """提取主体内容 HTML 和截图列表"""
+        """提取主体内容为结构化 JSON 数组"""
         content_el = soup.select_one(".panel-body.single")
         if not content_el:
-            return "", []
+            return [], []
 
+        blocks = []
         screenshots = []
-        # 收集内容区的图片 URL
-        for img in content_el.select("img"):
-            img_url = img.get("data-src") or img.get("src", "")
-            if img_url and "placeholder" not in str(img_url) and "t.png" not in str(img_url):
-                screenshots.append(str(img_url))
 
-        # 获取处理后的 HTML
-        content_html = str(content_el)
-        return content_html, screenshots
+        for child in content_el.children:
+            if not hasattr(child, "name") or not child.name:
+                continue
+
+            # 标题
+            if child.name in ("h2", "h3", "h4"):
+                text = child.get_text(strip=True)
+                if text:
+                    blocks.append({"type": "text", "content": text})
+
+            # 段落
+            elif child.name == "p":
+                text = child.get_text(strip=True)
+                if text:
+                    blocks.append({"type": "text", "content": text})
+
+            # 图片
+            elif child.name == "img":
+                img_url = child.get("data-src") or child.get("src", "")
+                img_url = str(img_url)
+                if img_url and "placeholder" not in img_url and "t.png" not in img_url:
+                    blocks.append({"type": "image", "content": img_url})
+                    screenshots.append(img_url)
+
+            # 列表
+            elif child.name in ("ul", "ol"):
+                for li in child.select("li"):
+                    text = li.get_text(strip=True)
+                    if text:
+                        blocks.append({"type": "text", "content": text})
+
+            # div（可能嵌套了内容）
+            elif child.name == "div":
+                for el in child.find_all(["h2", "h3", "p", "img", "li"]):
+                    if el.name == "img":
+                        img_url = el.get("data-src") or el.get("src", "")
+                        img_url = str(img_url)
+                        if img_url and "placeholder" not in img_url and "t.png" not in img_url:
+                            blocks.append({"type": "image", "content": img_url})
+                            screenshots.append(img_url)
+                    else:
+                        text = el.get_text(strip=True)
+                        if text:
+                            blocks.append({"type": "text", "content": text})
+
+        return blocks, screenshots
 
     def _extract_faq(self, soup: BeautifulSoup) -> list:
         """提取 FAQ"""

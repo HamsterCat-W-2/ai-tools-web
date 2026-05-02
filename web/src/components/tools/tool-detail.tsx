@@ -130,10 +130,47 @@ export function ToolDetailPage({ tool }: ToolDetailProps) {
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">
                   详细介绍
                 </h2>
-                <div
-                  className="prose prose-sm max-w-none"
-                  dangerouslySetInnerHTML={{ __html: detail.contentHtml }}
-                />
+                <div className="space-y-4">
+                  {(() => {
+                    try {
+                      const blocks =
+                        typeof detail.contentHtml === "string"
+                          ? JSON.parse(detail.contentHtml)
+                          : detail.contentHtml;
+                      return blocks.map(
+                        (
+                          block: { type: string; content: string },
+                          i: number
+                        ) =>
+                          block.type === "image" ? (
+                            <img
+                              key={i}
+                              src={block.content}
+                              alt=""
+                              className="rounded-lg border border-gray-100 w-full"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <p
+                              key={i}
+                              className="text-sm text-gray-700 leading-relaxed"
+                            >
+                              {block.content}
+                            </p>
+                          )
+                      );
+                    } catch {
+                      return (
+                        <div
+                          className="prose prose-sm max-w-none"
+                          dangerouslySetInnerHTML={{
+                            __html: detail.contentHtml,
+                          }}
+                        />
+                      );
+                    }
+                  })()}
+                </div>
               </div>
             )}
 
