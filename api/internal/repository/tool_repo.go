@@ -6,7 +6,67 @@ import (
 	"encoding/json"
 )
 
-func GetTools(category string) ([]model.Tool, error) {
+func getTranslations(toolID string, lang string) (map[string]string, error) {
+	rows, err := GetDB().Query(
+		"SELECT field, value FROM tool_translations WHERE tool_id = ? AND lang = ?",
+		toolID, lang,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	result := make(map[string]string)
+	for rows.Next() {
+		var field, value string
+		if err := rows.Scan(&field, &value); err != nil {
+			return nil, err
+		}
+		result[field] = value
+	}
+	return result, nil
+}
+
+func applyTranslation(tool *model.Tool, translations map[string]string) {
+	if v, ok := translations["name"]; ok {
+		tool.Name = v
+	}
+	if v, ok := translations["description"]; ok {
+		tool.Description = v
+	}
+	if v, ok := translations["tags"]; ok {
+		var tags []string
+		json.Unmarshal([]byte(v), &tags)
+		if tags != nil {
+			tool.Tags = tags
+		}
+	}
+	if v, ok := translations["features"]; ok {
+		var features []string
+		json.Unmarshal([]byte(v), &features)
+		if features != nil {
+			tool.Features = features
+		}
+	}
+}
+
+func applyDetailTranslation(detail *model.ToolDetail, translations map[string]string) {
+	if v, ok := translations["content_blocks"]; ok {
+		detail.ContentHTML = v
+	}
+	if v, ok := translations["faq"]; ok {
+		var faq []model.FAQItem
+		json.Unmarshal([]byte(v), &faq)
+		if faq != nil {
+			detail.FAQ = faq
+		}
+	}
+	if v, ok := translations["pricing"]; ok {
+		detail.Pricing = v
+	}
+}
+
+func GetTools(category string, lang string) ([]model.Tool, error) {
 	var rows *sql.Rows
 	var err error
 
@@ -38,15 +98,38 @@ func GetTools(category string) ([]model.Tool, error) {
 		tools = []model.Tool{}
 	}
 
+	// Apply translations if lang is specified
+	if lang != "" && lang != "zh" {
+		for i := range tools {
+			translations, err := getTranslations(tools[i].ID, lang)
+			if err == nil && len(translations) > 0 {
+				applyTranslation(&tools[i], translations)
+			}
+		}
+	}
+
 	return tools, nil
 }
 
-func GetToolByID(id string) (*model.Tool, error) {
+func GetToolByID(id string, lang string) (*model.Tool, error) {
 	row := GetDB().QueryRow(
 		"SELECT id, name, description, url, detail_url, category, icon, tags, features, pricing, crawled_at, created_at, updated_at FROM tools WHERE id = ?",
 		id,
 	)
-	return model.ScanTool(row)
+	tool, err := model.ScanTool(row)
+	if err != nil {
+		return nil, err
+	}
+
+	// Apply translations if lang is specified
+	if lang != "" && lang != "zh" {
+		translations, err := getTranslations(id, lang)
+		if err == nil && len(translations) > 0 {
+			applyTranslation(tool, translations)
+		}
+	}
+
+	return tool, nil
 }
 
 func GetCategories() ([]string, error) {
@@ -78,7 +161,7 @@ func GetToolsCount() (int, error) {
 	return count, err
 }
 
-func SearchTools(keyword string) ([]model.Tool, error) {
+func SearchTools(keyword string, lang string) ([]model.Tool, error) {
 	rows, err := GetDB().Query(
 		`SELECT id, name, description, url, category, icon, tags, features, crawled_at, created_at, updated_at
 		 FROM tools
@@ -106,10 +189,20 @@ func SearchTools(keyword string) ([]model.Tool, error) {
 		tools = []model.Tool{}
 	}
 
+	// Apply translations if lang is specified
+	if lang != "" && lang != "zh" {
+		for i := range tools {
+			translations, err := getTranslations(tools[i].ID, lang)
+			if err == nil && len(translations) > 0 {
+				applyTranslation(&tools[i], translations)
+			}
+		}
+	}
+
 	return tools, nil
 }
 
-func GetToolDetailByID(id string) (*model.ToolWithDetail, error) {
+func GetToolDetailByID(id string, lang string) (*model.ToolWithDetail, error) {
 	row := GetDB().QueryRow(
 		`SELECT t.id, t.name, t.description, t.url, t.detail_url, t.category, t.icon, t.tags, t.features, t.pricing, t.crawled_at, t.created_at, t.updated_at,
 		        d.content_html, d.screenshots, d.pricing, d.faq, d.like_count, d.comment_count, d.published_at
@@ -192,6 +285,17 @@ func GetToolDetailByID(id string) (*model.ToolWithDetail, error) {
 			detail.PublishedAt = publishedAt.String
 		}
 		td.Detail = detail
+	}
+
+	// Apply translations if lang is specified
+	if lang != "" && lang != "zh" {
+		translations, err := getTranslations(id, lang)
+		if err == nil && len(translations) > 0 {
+			applyTranslation(&td.Tool, translations)
+			if td.Detail != nil {
+				applyDetailTranslation(td.Detail, translations)
+			}
+		}
 	}
 
 	return &td, nil

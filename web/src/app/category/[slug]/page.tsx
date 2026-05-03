@@ -7,6 +7,7 @@ import { ToolsWithSearch } from "@/components/tools/tools-with-search";
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ lang?: string }>;
 }
 
 export async function generateStaticParams() {
@@ -28,15 +29,16 @@ export async function generateMetadata({
   };
 }
 
-export default async function CategoryPage({ params }: CategoryPageProps) {
+export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
   const { slug } = await params;
+  const { lang } = await searchParams;
   const categories = await getCategories();
 
   if (!categories.includes(slug)) {
     notFound();
   }
 
-  const tools = await getToolsByCategory(slug);
+  const tools = await getToolsByCategory(slug, lang);
   const label = getCategoryLabel(slug);
 
   return (

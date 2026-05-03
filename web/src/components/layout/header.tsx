@@ -1,3 +1,5 @@
+import { LanguageSwitcher } from "./language-switcher";
+
 export function Header() {
   return (
     <header className="bg-white border-b border-gray-200">
@@ -9,8 +11,11 @@ export function Header() {
               发现最好用的AI工具
             </p>
           </div>
-          <div className="text-sm text-gray-400">
-            Powered by AI-Bot.cn
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher />
+            <div className="text-sm text-gray-400">
+              Powered by AI-Bot.cn
+            </div>
           </div>
         </div>
       </div>

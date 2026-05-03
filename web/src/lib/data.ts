@@ -2,9 +2,14 @@ import { ToolsData, AITool, ToolWithDetail } from "@/types/tool";
 
 const API_URL = process.env.API_URL || "http://localhost:8081";
 
-export async function getToolsData(): Promise<ToolsData> {
+export async function getToolsData(lang?: string): Promise<ToolsData> {
   try {
-    const response = await fetch(`${API_URL}/api/tools`, {
+    const params = new URLSearchParams();
+    if (lang) params.set("lang", lang);
+    const query = params.toString();
+    const url = query ? `${API_URL}/api/tools?${query}` : `${API_URL}/api/tools`;
+
+    const response = await fetch(url, {
       cache: "no-store",
     });
 
@@ -50,22 +55,26 @@ export async function getCategories(): Promise<string[]> {
   }
 }
 
-export async function getToolsByCategory(category: string): Promise<AITool[]> {
+export async function getToolsByCategory(category: string, lang?: string): Promise<AITool[]> {
   try {
-    const response = await fetch(`${API_URL}/api/tools?category=${category}`);
+    const params = new URLSearchParams({ category });
+    if (lang) params.set("lang", lang);
+    const response = await fetch(`${API_URL}/api/tools?${params.toString()}`);
     const data = await response.json();
     return data.tools || [];
   } catch (error) {
     console.error("Failed to load tools by category:", error);
-    const toolsData = await getToolsData();
+    const toolsData = await getToolsData(lang);
     return toolsData.tools.filter((tool) => tool.category === category);
   }
 }
 
-export async function searchTools(keyword: string): Promise<AITool[]> {
+export async function searchTools(keyword: string, lang?: string): Promise<AITool[]> {
   try {
+    const params = new URLSearchParams({ keyword });
+    if (lang) params.set("lang", lang);
     const response = await fetch(
-      `${API_URL}/api/tools?keyword=${encodeURIComponent(keyword)}`
+      `${API_URL}/api/tools/search?${params.toString()}`
     );
     const data = await response.json();
     return data.tools || [];
@@ -75,9 +84,16 @@ export async function searchTools(keyword: string): Promise<AITool[]> {
   }
 }
 
-export async function getToolDetail(id: string): Promise<ToolWithDetail | null> {
+export async function getToolDetail(id: string, lang?: string): Promise<ToolWithDetail | null> {
   try {
-    const response = await fetch(`${API_URL}/api/tools/${id}/detail`, {
+    const params = new URLSearchParams();
+    if (lang) params.set("lang", lang);
+    const query = params.toString();
+    const url = query
+      ? `${API_URL}/api/tools/${id}/detail?${query}`
+      : `${API_URL}/api/tools/${id}/detail`;
+
+    const response = await fetch(url, {
       cache: "no-store",
     });
     if (!response.ok) {

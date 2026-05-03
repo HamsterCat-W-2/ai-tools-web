@@ -167,6 +167,7 @@ func (x *Tool) GetPricing() string {
 type GetToolsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Category      string                 `protobuf:"bytes,1,opt,name=category,proto3" json:"category,omitempty"`
+	Lang          string                 `protobuf:"bytes,2,opt,name=lang,proto3" json:"lang,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -204,6 +205,13 @@ func (*GetToolsRequest) Descriptor() ([]byte, []int) {
 func (x *GetToolsRequest) GetCategory() string {
 	if x != nil {
 		return x.Category
+	}
+	return ""
+}
+
+func (x *GetToolsRequest) GetLang() string {
+	if x != nil {
+		return x.Lang
 	}
 	return ""
 }
@@ -281,6 +289,7 @@ func (x *GetToolsResponse) GetLastUpdated() string {
 type GetToolRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Lang          string                 `protobuf:"bytes,2,opt,name=lang,proto3" json:"lang,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -318,6 +327,13 @@ func (*GetToolRequest) Descriptor() ([]byte, []int) {
 func (x *GetToolRequest) GetId() string {
 	if x != nil {
 		return x.Id
+	}
+	return ""
+}
+
+func (x *GetToolRequest) GetLang() string {
+	if x != nil {
+		return x.Lang
 	}
 	return ""
 }
@@ -408,6 +424,7 @@ func (x *GetCategoriesResponse) GetCategories() []string {
 type SearchToolsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Keyword       string                 `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Lang          string                 `protobuf:"bytes,2,opt,name=lang,proto3" json:"lang,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -445,6 +462,13 @@ func (*SearchToolsRequest) Descriptor() ([]byte, []int) {
 func (x *SearchToolsRequest) GetKeyword() string {
 	if x != nil {
 		return x.Keyword
+	}
+	return ""
+}
+
+func (x *SearchToolsRequest) GetLang() string {
+	if x != nil {
+		return x.Lang
 	}
 	return ""
 }
@@ -660,6 +684,7 @@ func (x *ToolDetail) GetPublishedAt() string {
 type GetToolDetailRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Lang          string                 `protobuf:"bytes,2,opt,name=lang,proto3" json:"lang,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -697,6 +722,13 @@ func (*GetToolDetailRequest) Descriptor() ([]byte, []int) {
 func (x *GetToolDetailRequest) GetId() string {
 	if x != nil {
 		return x.Id
+	}
+	return ""
+}
+
+func (x *GetToolDetailRequest) GetLang() string {
+	if x != nil {
+		return x.Lang
 	}
 	return ""
 }
@@ -777,9 +809,10 @@ const file_proto_tool_proto_rawDesc = "" +
 	"updated_at\x18\v \x01(\tR\tupdatedAt\x12\x1d\n" +
 	"\n" +
 	"detail_url\x18\f \x01(\tR\tdetailUrl\x12\x18\n" +
-	"\apricing\x18\r \x01(\tR\apricing\"-\n" +
+	"\apricing\x18\r \x01(\tR\apricing\"A\n" +
 	"\x0fGetToolsRequest\x12\x1a\n" +
-	"\bcategory\x18\x01 \x01(\tR\bcategory\"\x8d\x01\n" +
+	"\bcategory\x18\x01 \x01(\tR\bcategory\x12\x12\n" +
+	"\x04lang\x18\x02 \x01(\tR\x04lang\"\x8d\x01\n" +
 	"\x10GetToolsResponse\x12 \n" +
 	"\x05tools\x18\x01 \x03(\v2\n" +
 	".tool.ToolR\x05tools\x12\x1e\n" +
@@ -787,16 +820,18 @@ const file_proto_tool_proto_rawDesc = "" +
 	"categories\x18\x02 \x03(\tR\n" +
 	"categories\x12\x14\n" +
 	"\x05total\x18\x03 \x01(\x05R\x05total\x12!\n" +
-	"\flast_updated\x18\x04 \x01(\tR\vlastUpdated\" \n" +
+	"\flast_updated\x18\x04 \x01(\tR\vlastUpdated\"4\n" +
 	"\x0eGetToolRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"\x16\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04lang\x18\x02 \x01(\tR\x04lang\"\x16\n" +
 	"\x14GetCategoriesRequest\"7\n" +
 	"\x15GetCategoriesResponse\x12\x1e\n" +
 	"\n" +
 	"categories\x18\x01 \x03(\tR\n" +
-	"categories\".\n" +
+	"categories\"B\n" +
 	"\x12SearchToolsRequest\x12\x18\n" +
-	"\akeyword\x18\x01 \x01(\tR\akeyword\"M\n" +
+	"\akeyword\x18\x01 \x01(\tR\akeyword\x12\x12\n" +
+	"\x04lang\x18\x02 \x01(\tR\x04lang\"M\n" +
 	"\x13SearchToolsResponse\x12 \n" +
 	"\x05tools\x18\x01 \x03(\v2\n" +
 	".tool.ToolR\x05tools\x12\x14\n" +
@@ -814,9 +849,10 @@ const file_proto_tool_proto_rawDesc = "" +
 	"\n" +
 	"like_count\x18\x06 \x01(\x05R\tlikeCount\x12#\n" +
 	"\rcomment_count\x18\a \x01(\x05R\fcommentCount\x12!\n" +
-	"\fpublished_at\x18\b \x01(\tR\vpublishedAt\"&\n" +
+	"\fpublished_at\x18\b \x01(\tR\vpublishedAt\":\n" +
 	"\x14GetToolDetailRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"a\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04lang\x18\x02 \x01(\tR\x04lang\"a\n" +
 	"\x15GetToolDetailResponse\x12\x1e\n" +
 	"\x04tool\x18\x01 \x01(\v2\n" +
 	".tool.ToolR\x04tool\x12(\n" +

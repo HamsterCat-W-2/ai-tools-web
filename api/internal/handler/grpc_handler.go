@@ -19,7 +19,7 @@ func NewToolServer() *ToolServer {
 
 // GetTools 获取工具列表
 func (s *ToolServer) GetTools(ctx context.Context, req *pb.GetToolsRequest) (*pb.GetToolsResponse, error) {
-	tools, err := repository.GetTools(req.GetCategory())
+	tools, err := repository.GetTools(req.GetCategory(), req.GetLang())
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Failed to get tools: %v", err)
 	}
@@ -57,7 +57,7 @@ func (s *ToolServer) GetTools(ctx context.Context, req *pb.GetToolsRequest) (*pb
 
 // GetTool 获取单个工具
 func (s *ToolServer) GetTool(ctx context.Context, req *pb.GetToolRequest) (*pb.Tool, error) {
-	tool, err := repository.GetToolByID(req.GetId())
+	tool, err := repository.GetToolByID(req.GetId(), req.GetLang())
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "Tool not found: %v", err)
 	}
@@ -93,7 +93,7 @@ func (s *ToolServer) GetCategories(ctx context.Context, req *pb.GetCategoriesReq
 
 // SearchTools 搜索工具
 func (s *ToolServer) SearchTools(ctx context.Context, req *pb.SearchToolsRequest) (*pb.SearchToolsResponse, error) {
-	tools, err := repository.SearchTools(req.GetKeyword())
+	tools, err := repository.SearchTools(req.GetKeyword(), req.GetLang())
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Failed to search tools: %v", err)
 	}
@@ -125,7 +125,7 @@ func (s *ToolServer) SearchTools(ctx context.Context, req *pb.SearchToolsRequest
 
 // GetToolDetail 获取工具详情
 func (s *ToolServer) GetToolDetail(ctx context.Context, req *pb.GetToolDetailRequest) (*pb.GetToolDetailResponse, error) {
-	td, err := repository.GetToolDetailByID(req.GetId())
+	td, err := repository.GetToolDetailByID(req.GetId(), req.GetLang())
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "Tool not found: %v", err)
 	}

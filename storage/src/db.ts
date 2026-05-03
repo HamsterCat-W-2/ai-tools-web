@@ -227,3 +227,95 @@ export async function getToolDetail(
 
   return tool;
 }
+
+// ========== Translations ==========
+
+export interface Translation {
+  tool_id: string;
+  lang: string;
+  field: string;
+  value: string;
+}
+
+export async function upsertTranslation(
+  toolId: string,
+  lang: string,
+  field: string,
+  value: string
+): Promise<void> {
+  const pool = getPool();
+  const sql = `
+    INSERT INTO tool_translations (tool_id, lang, field, value)
+    VALUES (?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE value = VALUES(value)
+  `;
+  await pool.execute(sql, [toolId, lang, field, value]);
+}
+
+export async function upsertTranslationsBatch(
+  translations: Translation[]
+): Promise<void> {
+  const pool = getPool();
+  const sql = `
+    INSERT INTO tool_translations (tool_id, lang, field, value)
+    VALUES (?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE value = VALUES(value)
+  `;
+  for (const t of translations) {
+    await pool.execute(sql, [t.tool_id, t.lang, t.field, t.value]);
+  }
+}
+
+export async function getTranslations(
+  toolId: string,
+  lang: string
+): Promise<Record<string, string>> {
+  const pool = getPool();
+  const [rows] = await pool.execute(
+    "SELECT field, value FROM tool_translations WHERE tool_id = ? AND lang = ?",
+    [toolId, lang]
+  );
+  const result: Record<string, string> = {};
+  for (const row of rows as any[]) {
+    result[row.field] = row.value;
+  }
+  return result;
+}
+
+export async function getToolWithTranslation(
+  toolId: string,
+  lang?: string
+): Promise<ToolWithDetail | null> {
+  const tool = await getToolDetail(toolId);
+  if (!tool || !lang || lang === "zh") return tool;
+
+  const translations = await getTranslations(toolId, lang);
+
+  // Apply translations to tool fields
+  if (translations.name) tool.name = translations.name;
+  if (translations.description) tool.description = translations.description;
+  if (translations.tags) {
+    try {
+      tool.tags = JSON.parse(translations.tags);
+    } catch {}
+  }
+  if (translations.features) {
+    try {
+      tool.features = JSON.parse(translations.features);
+    } catch {}
+  }
+
+  // Apply translations to detail fields
+  if (tool.detail) {
+    if (translations.content_blocks) {
+      tool.detail.content_html = translations.content_blocks;
+    }
+    if (translations.faq) {
+      try {
+        tool.detail.faq = JSON.parse(translations.faq);
+      } catch {}
+    }
+  }
+
+  return tool;
+}

@@ -2,8 +2,13 @@ import { getToolsData } from "@/lib/data";
 import { Sidebar } from "@/components/layout/sidebar";
 import { HomeContent } from "@/components/tools/home-content";
 
-export default async function Home() {
-  const data = await getToolsData();
+interface PageProps {
+  searchParams: Promise<{ lang?: string }>;
+}
+
+export default async function Home({ searchParams }: PageProps) {
+  const { lang } = await searchParams;
+  const data = await getToolsData(lang);
 
   return (
     <div className="flex min-h-screen bg-gray-50">

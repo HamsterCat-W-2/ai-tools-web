@@ -4,11 +4,13 @@ import { notFound } from "next/navigation";
 
 interface PageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ lang?: string }>;
 }
 
-export default async function ToolPage({ params }: PageProps) {
+export default async function ToolPage({ params, searchParams }: PageProps) {
   const { id } = await params;
-  const tool = await getToolDetail(id);
+  const { lang } = await searchParams;
+  const tool = await getToolDetail(id, lang);
 
   if (!tool) {
     notFound();

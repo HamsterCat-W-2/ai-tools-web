@@ -5,6 +5,7 @@ import path from "path";
 import { minioClient, ensureBucket } from "./minio-client";
 import { config } from "./config";
 import {
+  getPool,
   getTools,
   getToolById,
   getCategories,
@@ -14,8 +15,12 @@ import {
   deleteTool,
   upsertToolDetail,
   getToolDetail,
+  upsertTranslation,
+  upsertTranslationsBatch,
+  getToolWithTranslation,
   Tool,
   ToolDetail,
+  Translation,
 } from "./db";
 
 const router = Router();
@@ -214,7 +219,8 @@ router.delete("/tools/:id", async (req: Request, res: Response) => {
 // 获取工具详情（含基础信息）
 router.get("/tools/:id/detail", async (req: Request, res: Response) => {
   try {
-    const tool = await getToolDetail(req.params.id);
+    const lang = req.query.lang as string | undefined;
+    const tool = await getToolWithTranslation(req.params.id, lang);
     if (!tool) {
       return res.status(404).json({ error: "Tool not found" });
     }
@@ -250,6 +256,62 @@ router.post("/tools/details/batch", async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Batch upsert details failed:", error);
     res.status(500).json({ error: "Failed to save tool details" });
+  }
+});
+
+// ========== 翻译接口 ==========
+
+// 写入单条翻译
+router.post("/tools/:id/translations", async (req: Request, res: Response) => {
+  try {
+    const { lang, field, value } = req.body;
+    if (!lang || !field || value === undefined) {
+      return res.status(400).json({ error: "lang, field, value are required" });
+    }
+    await upsertTranslation(req.params.id, lang, field, value);
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Upsert translation failed:", error);
+    res.status(500).json({ error: "Failed to save translation" });
+  }
+});
+
+// 批量写入翻译
+router.post("/tools/translations/batch", async (req: Request, res: Response) => {
+  try {
+    const translations: Translation[] = req.body.translations;
+    if (!Array.isArray(translations)) {
+      return res.status(400).json({ error: "translations array is required" });
+    }
+    await upsertTranslationsBatch(translations);
+    res.json({ success: true, count: translations.length });
+  } catch (error) {
+    console.error("Batch upsert translations failed:", error);
+    res.status(500).json({ error: "Failed to save translations" });
+  }
+});
+
+// 检查工具是否有翻译
+router.get("/translations/check", async (req: Request, res: Response) => {
+  try {
+    const toolId = req.query.tool_id as string;
+    const lang = req.query.lang as string;
+
+    if (!toolId || !lang) {
+      return res.status(400).json({ error: "tool_id and lang are required" });
+    }
+
+    const pool = getPool();
+    const [rows] = await pool.execute(
+      "SELECT COUNT(*) as count FROM tool_translations WHERE tool_id = ? AND lang = ?",
+      [toolId, lang]
+    );
+    const count = (rows as any[])[0].count;
+
+    res.json({ exists: count > 0 });
+  } catch (error) {
+    console.error("Check translations failed:", error);
+    res.status(500).json({ error: "Failed to check translations" });
   }
 });
 

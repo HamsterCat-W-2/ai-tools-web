@@ -60,6 +60,7 @@ message Tool {
 // 获取工具列表请求
 message GetToolsRequest {
   string category = 1;
+  string lang = 2;
 }
 
 // 获取工具列表响应
@@ -73,6 +74,7 @@ message GetToolsResponse {
 // 获取单个工具请求
 message GetToolRequest {
   string id = 1;
+  string lang = 2;
 }
 
 // 获取分类列表请求
@@ -86,6 +88,7 @@ message GetCategoriesResponse {
 // 搜索工具请求
 message SearchToolsRequest {
   string keyword = 1;
+  string lang = 2;
 }
 
 // 搜索工具响应
@@ -115,6 +118,7 @@ message ToolDetail {
 // 获取工具详情请求
 message GetToolDetailRequest {
   string id = 1;
+  string lang = 2;
 }
 
 // 获取工具详情响应
