@@ -16,10 +16,10 @@ export function ToolDetailPage({ tool }: ToolDetailProps) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   return (
-    <div className="max-w-5xl mx-auto">
-      {/* 工具信息卡片 */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
-        <div className="flex items-center gap-4">
+    <div className="max-w-4xl mx-auto">
+      {/* 工具头部信息 */}
+      <div className="mb-8">
+        <div className="flex items-center gap-4 mb-4">
           {tool.icon && (
             <img
               src={tool.icon}
@@ -30,41 +30,22 @@ export function ToolDetailPage({ tool }: ToolDetailProps) {
               }}
             />
           )}
-          <div className="flex-1">
-            <h1 className="text-xl font-bold text-gray-900">{tool.name}</h1>
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mt-1">
-              {getCategoryLabel(tool.category, locale)}
-            </span>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">{tool.name}</h1>
+            <div className="flex items-center gap-3 mt-1">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                {getCategoryLabel(tool.category, locale)}
+              </span>
+              {detail?.pricing && (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  {detail.pricing}
+                </span>
+              )}
+            </div>
           </div>
-          <a
-            href={tool.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm"
-          >
-            {t("visitWebsite")} &rarr;
-          </a>
         </div>
 
-        <p className="mt-4 text-sm text-gray-600">{tool.description}</p>
-
-        <div className="mt-4 flex items-center gap-4 flex-wrap">
-          {detail?.pricing && (
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-              {detail.pricing}
-            </span>
-          )}
-          {detail && detail.likeCount > 0 && (
-            <span className="text-sm text-gray-500">
-              &#x2764; {detail.likeCount}
-            </span>
-          )}
-          {detail && detail.commentCount > 0 && (
-            <span className="text-sm text-gray-500">
-              &#x1f4ac; {detail.commentCount}
-            </span>
-          )}
-        </div>
+        <p className="text-gray-600 leading-relaxed">{tool.description}</p>
 
         {tool.tags.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-2">
@@ -78,11 +59,20 @@ export function ToolDetailPage({ tool }: ToolDetailProps) {
             ))}
           </div>
         )}
+
+        <a
+          href={tool.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 inline-block px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm"
+        >
+          {t("visitWebsite")} &rarr;
+        </a>
       </div>
 
       {/* 截图 */}
       {detail?.screenshots && detail.screenshots.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+        <section className="mb-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">
             {t("screenshots")}
           </h2>
@@ -92,21 +82,21 @@ export function ToolDetailPage({ tool }: ToolDetailProps) {
                 key={i}
                 src={src}
                 alt={t("screenshotAlt", { name: tool.name, index: i + 1 })}
-                className="rounded-lg border border-gray-100 w-full object-cover"
+                className="rounded-lg border border-gray-200 w-full object-cover"
                 loading="lazy"
               />
             ))}
           </div>
-        </div>
+        </section>
       )}
 
       {/* 详细介绍 */}
       {detail?.contentHtml && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+        <section className="mb-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">
             {t("detailedIntro")}
           </h2>
-          <div className="space-y-4">
+          <div className="text-gray-700 leading-relaxed space-y-4">
             {(() => {
               try {
                 const blocks =
@@ -127,7 +117,7 @@ export function ToolDetailPage({ tool }: ToolDetailProps) {
                         key={i}
                         src={block.content}
                         alt=""
-                        className="rounded-lg border border-gray-100 w-full"
+                        className="rounded-lg border border-gray-200 w-full"
                         loading="lazy"
                       />
                     ) : block.style === "heading" ? (
@@ -138,10 +128,7 @@ export function ToolDetailPage({ tool }: ToolDetailProps) {
                         {block.content}
                       </h3>
                     ) : (
-                      <p
-                        key={i}
-                        className="text-sm text-gray-700 leading-relaxed"
-                      >
+                      <p key={i} className="text-sm leading-relaxed">
                         {block.content}
                       </p>
                     )
@@ -158,12 +145,12 @@ export function ToolDetailPage({ tool }: ToolDetailProps) {
               }
             })()}
           </div>
-        </div>
+        </section>
       )}
 
       {/* FAQ */}
       {detail?.faq && detail.faq.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <section className="mb-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">
             {t("faq")}
           </h2>
@@ -171,28 +158,28 @@ export function ToolDetailPage({ tool }: ToolDetailProps) {
             {detail.faq.map((item, i) => (
               <div
                 key={i}
-                className="border border-gray-100 rounded-lg overflow-hidden"
+                className="border border-gray-200 rounded-lg overflow-hidden"
               >
                 <button
-                  className="w-full text-left px-4 py-3 flex justify-between items-center hover:bg-gray-50"
+                  className="w-full text-left px-4 py-3 flex justify-between items-center hover:bg-gray-50 transition-colors"
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                 >
                   <span className="font-medium text-sm text-gray-900">
                     {item.question}
                   </span>
-                  <span className="text-gray-400 ml-2">
+                  <span className="text-gray-400 ml-2 text-lg">
                     {openFaq === i ? "−" : "+"}
                   </span>
                 </button>
                 {openFaq === i && (
-                  <div className="px-4 pb-3 text-sm text-gray-600">
+                  <div className="px-4 pb-3 text-sm text-gray-600 border-t border-gray-100 pt-3">
                     {item.answer}
                   </div>
                 )}
               </div>
             ))}
           </div>
-        </div>
+        </section>
       )}
 
       {/* 无详情时的提示 */}
