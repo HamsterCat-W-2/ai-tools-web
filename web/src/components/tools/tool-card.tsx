@@ -1,7 +1,10 @@
+"use client";
+
+import { useLocale } from "next-intl";
 import { AITool } from "@/types/tool";
 import { cn } from "@/lib/utils";
 import { getCategoryLabel } from "@/lib/categories";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 interface ToolCardProps {
   tool: AITool;
@@ -9,6 +12,8 @@ interface ToolCardProps {
 }
 
 export function ToolCard({ tool, className }: ToolCardProps) {
+  const locale = useLocale();
+
   return (
     <Link
       href={`/tools/${tool.id}`}
@@ -40,7 +45,7 @@ export function ToolCard({ tool, className }: ToolCardProps) {
 
       <div className="mt-4 flex flex-wrap gap-2">
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-          {getCategoryLabel(tool.category)}
+          {getCategoryLabel(tool.category, locale)}
         </span>
         {tool.tags.slice(0, 3).map((tag) => (
           <span
@@ -56,10 +61,7 @@ export function ToolCard({ tool, className }: ToolCardProps) {
         <div className="mt-4 pt-4 border-t border-gray-100">
           <div className="flex flex-wrap gap-2">
             {tool.features.slice(0, 3).map((feature) => (
-              <span
-                key={feature}
-                className="text-xs text-gray-500"
-              >
+              <span key={feature} className="text-xs text-gray-500">
                 {feature}
               </span>
             ))}

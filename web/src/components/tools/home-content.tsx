@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
+import { useTranslations, useLocale } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { AITool } from "@/types/tool";
 import { getCategoryLabel } from "@/lib/categories";
 import { SearchInput } from "@/components/ui/search-input";
@@ -13,6 +14,9 @@ interface HomeContentProps {
 }
 
 export function HomeContent({ tools, categories }: HomeContentProps) {
+  const t = useTranslations("HomeContent");
+  const tSearch = useTranslations("Search");
+  const locale = useLocale();
   const [search, setSearch] = useState("");
 
   const filteredTools = useMemo(() => {
@@ -27,23 +31,22 @@ export function HomeContent({ tools, categories }: HomeContentProps) {
     );
   }, [tools, search]);
 
-  // 搜索模式：显示匹配的工具
   if (search) {
     return (
       <div className="space-y-6">
         <SearchInput value={search} onChange={setSearch} className="max-w-xl" />
         <p className="text-gray-500">
-          搜索 &quot;{search}&quot; - 共 {filteredTools.length} 个结果
+          {tSearch("searchPrefix", { query: search })}
+          {tSearch("resultCount", { count: filteredTools.length })}
         </p>
         <ToolsGrid tools={filteredTools} />
       </div>
     );
   }
 
-  // 默认模式：按分类展示
   const groupedTools = categories.map((category) => ({
     category,
-    label: getCategoryLabel(category),
+    label: getCategoryLabel(category, locale),
     tools: tools.filter((tool) => tool.category === category),
   }));
 
@@ -58,7 +61,7 @@ export function HomeContent({ tools, categories }: HomeContentProps) {
               href={`/category/${category}`}
               className="text-sm text-blue-600 hover:text-blue-800"
             >
-              查看全部 &rarr;
+              {t("viewAll")} &rarr;
             </Link>
           </div>
           <ToolsGrid tools={categoryTools.slice(0, 6)} />

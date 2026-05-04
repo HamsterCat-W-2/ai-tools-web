@@ -1,26 +1,33 @@
-import Link from "next/link";
+import { getLocale, getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { getCategories } from "@/lib/data";
 import { getCategoryLabel } from "@/lib/categories";
+import { LanguageSwitcher } from "./language-switcher";
 
 interface SidebarProps {
   currentCategory?: string;
 }
 
 export async function Sidebar({ currentCategory }: SidebarProps) {
+  const locale = await getLocale();
+  const t = await getTranslations("Sidebar");
   const categories = await getCategories();
 
   return (
     <aside className="w-64 bg-white border-r border-gray-200 min-h-screen p-4">
       <div className="mb-6">
-        <Link href="/" className="text-xl font-bold text-gray-900">
-          AI Tools
-        </Link>
-        <p className="text-sm text-gray-500 mt-1">AI工具集导航</p>
+        <div className="flex items-center justify-between">
+          <Link href="/" className="text-xl font-bold text-gray-900">
+            AI Tools
+          </Link>
+          <LanguageSwitcher />
+        </div>
+        <p className="text-sm text-gray-500 mt-1">{t("subtitle")}</p>
       </div>
 
       <nav>
         <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-          分类导航
+          {t("categoryNav")}
         </h3>
         <ul className="space-y-1">
           <li>
@@ -32,7 +39,7 @@ export async function Sidebar({ currentCategory }: SidebarProps) {
                   : "text-gray-700 hover:bg-gray-50"
               }`}
             >
-              全部工具
+              {t("allTools")}
             </Link>
           </li>
           {categories.map((category) => (
@@ -45,7 +52,7 @@ export async function Sidebar({ currentCategory }: SidebarProps) {
                     : "text-gray-700 hover:bg-gray-50"
                 }`}
               >
-                {getCategoryLabel(category)}
+                {getCategoryLabel(category, locale)}
               </Link>
             </li>
           ))}

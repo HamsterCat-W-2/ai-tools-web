@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations, useLocale } from "next-intl";
 import { cn } from "@/lib/utils";
 import { getCategoryLabel } from "@/lib/categories";
 
@@ -16,6 +17,9 @@ export function CategoryFilter({
   onChange,
   className,
 }: CategoryFilterProps) {
+  const t = useTranslations("CategoryFilter");
+  const locale = useLocale();
+
   return (
     <div className={cn("flex flex-wrap gap-2", className)}>
       <button
@@ -27,7 +31,7 @@ export function CategoryFilter({
             : "bg-gray-100 text-gray-700 hover:bg-gray-200"
         )}
       >
-        全部
+        {t("all")}
       </button>
       {categories.map((category) => (
         <button
@@ -40,7 +44,7 @@ export function CategoryFilter({
               : "bg-gray-100 text-gray-700 hover:bg-gray-200"
           )}
         >
-          {getCategoryLabel(category)}
+          {getCategoryLabel(category, locale)}
         </button>
       ))}
     </div>

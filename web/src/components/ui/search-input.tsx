@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 interface SearchInputProps {
@@ -11,12 +12,14 @@ interface SearchInputProps {
 }
 
 export function SearchInput({
-  placeholder = "搜索AI工具...",
+  placeholder,
   value,
   onChange,
   className,
 }: SearchInputProps) {
+  const t = useTranslations("Search");
   const [localValue, setLocalValue] = useState(value);
+  const effectivePlaceholder = placeholder ?? t("placeholder");
 
   useEffect(() => {
     setLocalValue(value);
@@ -49,7 +52,7 @@ export function SearchInput({
         type="text"
         value={localValue}
         onChange={(e) => setLocalValue(e.target.value)}
-        placeholder={placeholder}
+        placeholder={effectivePlaceholder}
         className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
       />
     </div>

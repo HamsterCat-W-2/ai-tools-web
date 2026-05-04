@@ -1,6 +1,7 @@
 "use client";
 
 import { AITool } from "@/types/tool";
+import { useTranslations } from "next-intl";
 import { ToolCard } from "./tool-card";
 import { cn } from "@/lib/utils";
 
@@ -10,10 +11,12 @@ interface ToolsGridProps {
 }
 
 export function ToolsGrid({ tools, className }: ToolsGridProps) {
+  const t = useTranslations("ToolsGrid");
+
   if (tools.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">没有找到匹配的AI工具</p>
+        <p className="text-gray-500">{t("noResults")}</p>
       </div>
     );
   }

@@ -2,39 +2,38 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getCategories, getToolsByCategory } from "@/lib/data";
 import { getCategoryLabel } from "@/lib/categories";
+import { getTranslations } from "next-intl/server";
 import { Sidebar } from "@/components/layout/sidebar";
 import { ToolsWithSearch } from "@/components/tools/tools-with-search";
 
 export const dynamic = "force-dynamic";
 
 interface CategoryPageProps {
-  params: Promise<{ slug: string }>;
-  searchParams: Promise<{ lang?: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }
 
 export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const label = getCategoryLabel(slug);
+  const { locale, slug } = await params;
+  const label = getCategoryLabel(slug, locale);
 
   return {
-    title: `${label} - AI工具集导航`,
-    description: `发现最好用的${label}工具，收录热门AI应用`,
+    title: `${label} - AI Tools`,
+    description: `Discover the best ${label} tools`,
   };
 }
 
-export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
-  const { slug } = await params;
-  const { lang } = await searchParams;
+export default async function CategoryPage({ params }: CategoryPageProps) {
+  const { locale, slug } = await params;
   const categories = await getCategories();
 
   if (!categories.includes(slug)) {
     notFound();
   }
 
-  const tools = await getToolsByCategory(slug, lang);
-  const label = getCategoryLabel(slug);
+  const tools = await getToolsByCategory(slug, locale);
+  const label = getCategoryLabel(slug, locale);
 
   return (
     <div className="flex min-h-screen bg-gray-50">

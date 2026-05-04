@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { AITool } from "@/types/tool";
 import { SearchInput } from "@/components/ui/search-input";
 import { ToolsGrid } from "@/components/tools/tools-grid";
@@ -10,6 +11,7 @@ interface ToolsWithSearchProps {
 }
 
 export function ToolsWithSearch({ tools }: ToolsWithSearchProps) {
+  const t = useTranslations("Search");
   const [search, setSearch] = useState("");
 
   const filteredTools = useMemo(() => {
@@ -26,13 +28,10 @@ export function ToolsWithSearch({ tools }: ToolsWithSearchProps) {
 
   return (
     <div className="space-y-6">
-      <SearchInput
-        value={search}
-        onChange={setSearch}
-        className="max-w-xl"
-      />
+      <SearchInput value={search} onChange={setSearch} className="max-w-xl" />
       <p className="text-gray-500">
-        {search ? `搜索 "${search}" - ` : ""}共 {filteredTools.length} 个工具
+        {search ? t("searchPrefix", { query: search }) : ""}
+        {t("toolCount", { count: filteredTools.length })}
       </p>
       <ToolsGrid tools={filteredTools} />
     </div>
