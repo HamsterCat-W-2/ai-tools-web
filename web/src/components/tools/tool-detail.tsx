@@ -73,9 +73,6 @@ export function ToolDetailPage({ tool }: ToolDetailProps) {
       {/* 截图 */}
       {detail?.screenshots && detail.screenshots.length > 0 && (
         <section className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            {t("screenshots")}
-          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {detail.screenshots.map((src, i) => (
               <img
@@ -93,9 +90,6 @@ export function ToolDetailPage({ tool }: ToolDetailProps) {
       {/* 详细介绍 */}
       {detail?.contentHtml && (
         <section className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            {t("detailedIntro")}
-          </h2>
           <div className="text-gray-700 leading-relaxed space-y-4">
             {(() => {
               try {
