@@ -2,7 +2,6 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getCategories } from "@/lib/data";
 import { getCategoryLabel } from "@/lib/categories";
-import { LanguageSwitcher } from "./language-switcher";
 
 interface SidebarProps {
   currentCategory?: string;
@@ -15,16 +14,6 @@ export async function Sidebar({ currentCategory }: SidebarProps) {
 
   return (
     <aside className="w-64 bg-white border-r border-gray-200 min-h-screen p-4">
-      <div className="mb-6">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-gray-900">
-            AI Tools
-          </Link>
-          <LanguageSwitcher />
-        </div>
-        <p className="text-sm text-gray-500 mt-1">{t("subtitle")}</p>
-      </div>
-
       <nav>
         <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
           {t("categoryNav")}
