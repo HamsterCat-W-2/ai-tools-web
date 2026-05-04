@@ -32,7 +32,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     notFound();
   }
 
-  const tools = await getToolsByCategory(slug, locale);
+  const tools = await getToolsByCategory(slug);
   const label = getCategoryLabel(slug, locale);
 
   return (

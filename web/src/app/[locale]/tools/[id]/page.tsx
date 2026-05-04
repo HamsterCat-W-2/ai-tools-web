@@ -8,7 +8,7 @@ interface PageProps {
 
 export default async function ToolPage({ params }: PageProps) {
   const { locale, id } = await params;
-  const tool = await getToolDetail(id, locale);
+  const tool = await getToolDetail(id);
 
   if (!tool) {
     notFound();

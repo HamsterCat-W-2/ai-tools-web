@@ -10,7 +10,7 @@ interface PageProps {
 export default async function Home({ params }: PageProps) {
   const { locale } = await params;
   const t = await getTranslations("Home");
-  const data = await getToolsData(locale);
+  const data = await getToolsData();
 
   return (
     <div className="flex min-h-screen bg-gray-50">

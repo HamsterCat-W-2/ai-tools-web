@@ -6,6 +6,7 @@ import (
 	"context"
 
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -17,9 +18,21 @@ func NewToolServer() *ToolServer {
 	return &ToolServer{}
 }
 
+// getLangFromContext 从 gRPC metadata 中提取语言参数，回退到请求中的 lang 字段
+func getLangFromContext(ctx context.Context, reqLang string) string {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if ok {
+		if vals := md.Get("x-lang"); len(vals) > 0 && vals[0] != "" {
+			return vals[0]
+		}
+	}
+	return reqLang
+}
+
 // GetTools 获取工具列表
 func (s *ToolServer) GetTools(ctx context.Context, req *pb.GetToolsRequest) (*pb.GetToolsResponse, error) {
-	tools, err := repository.GetTools(req.GetCategory(), req.GetLang())
+	lang := getLangFromContext(ctx, req.GetLang())
+	tools, err := repository.GetTools(req.GetCategory(), lang)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Failed to get tools: %v", err)
 	}
@@ -57,7 +70,8 @@ func (s *ToolServer) GetTools(ctx context.Context, req *pb.GetToolsRequest) (*pb
 
 // GetTool 获取单个工具
 func (s *ToolServer) GetTool(ctx context.Context, req *pb.GetToolRequest) (*pb.Tool, error) {
-	tool, err := repository.GetToolByID(req.GetId(), req.GetLang())
+	lang := getLangFromContext(ctx, req.GetLang())
+	tool, err := repository.GetToolByID(req.GetId(), lang)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "Tool not found: %v", err)
 	}
@@ -93,7 +107,8 @@ func (s *ToolServer) GetCategories(ctx context.Context, req *pb.GetCategoriesReq
 
 // SearchTools 搜索工具
 func (s *ToolServer) SearchTools(ctx context.Context, req *pb.SearchToolsRequest) (*pb.SearchToolsResponse, error) {
-	tools, err := repository.SearchTools(req.GetKeyword(), req.GetLang())
+	lang := getLangFromContext(ctx, req.GetLang())
+	tools, err := repository.SearchTools(req.GetKeyword(), lang)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Failed to search tools: %v", err)
 	}
@@ -125,7 +140,8 @@ func (s *ToolServer) SearchTools(ctx context.Context, req *pb.SearchToolsRequest
 
 // GetToolDetail 获取工具详情
 func (s *ToolServer) GetToolDetail(ctx context.Context, req *pb.GetToolDetailRequest) (*pb.GetToolDetailResponse, error) {
-	td, err := repository.GetToolDetailByID(req.GetId(), req.GetLang())
+	lang := getLangFromContext(ctx, req.GetLang())
+	td, err := repository.GetToolDetailByID(req.GetId(), lang)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "Tool not found: %v", err)
 	}

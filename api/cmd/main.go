@@ -14,6 +14,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -51,7 +52,15 @@ func main() {
 	// 启动 HTTP 网关
 	httpPort := getEnv("HTTP_PORT", "8081")
 	ctx := context.Background()
-	mux := runtime.NewServeMux()
+	mux := runtime.NewServeMux(
+		runtime.WithMetadata(func(ctx context.Context, req *http.Request) metadata.MD {
+			lang := req.Header.Get("x-locale")
+			if lang != "" {
+				return metadata.Pairs("x-lang", lang)
+			}
+			return nil
+		}),
+	)
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
 	err = pb.RegisterToolServiceHandlerFromEndpoint(ctx, mux, fmt.Sprintf("localhost:%s", grpcPort), opts)
@@ -79,7 +88,7 @@ func corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, x-locale")
 
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusNoContent)

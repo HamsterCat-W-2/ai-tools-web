@@ -1,26 +1,25 @@
 import { ToolsData, AITool, ToolWithDetail } from "@/types/tool";
+import { getLocale } from "next-intl/server";
 
 const API_URL = process.env.API_URL || "http://localhost:8081";
 
-export async function getToolsData(lang?: string): Promise<ToolsData> {
+async function fetchWithLocale(url: string): Promise<Response> {
+  const locale = await getLocale();
+  return fetch(url, {
+    cache: "no-store",
+    headers: { "x-locale": locale },
+  });
+}
+
+export async function getToolsData(): Promise<ToolsData> {
   try {
-    const params = new URLSearchParams();
-    if (lang) params.set("lang", lang);
-    const query = params.toString();
-    const url = query ? `${API_URL}/api/tools?${query}` : `${API_URL}/api/tools`;
-
-    const response = await fetch(url, {
-      cache: "no-store",
-    });
-
+    const response = await fetchWithLocale(`${API_URL}/api/tools`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-
     return await response.json();
   } catch (error) {
     console.error("Failed to load tools data from API:", error);
-    // 回退到本地JSON文件
     return loadFromLocalFile();
   }
 }
@@ -45,7 +44,7 @@ async function loadFromLocalFile(): Promise<ToolsData> {
 
 export async function getCategories(): Promise<string[]> {
   try {
-    const response = await fetch(`${API_URL}/api/categories`);
+    const response = await fetchWithLocale(`${API_URL}/api/categories`);
     const data = await response.json();
     return data.categories || [];
   } catch (error) {
@@ -55,25 +54,25 @@ export async function getCategories(): Promise<string[]> {
   }
 }
 
-export async function getToolsByCategory(category: string, lang?: string): Promise<AITool[]> {
+export async function getToolsByCategory(category: string): Promise<AITool[]> {
   try {
     const params = new URLSearchParams({ category });
-    if (lang) params.set("lang", lang);
-    const response = await fetch(`${API_URL}/api/tools?${params.toString()}`);
+    const response = await fetchWithLocale(
+      `${API_URL}/api/tools?${params.toString()}`
+    );
     const data = await response.json();
     return data.tools || [];
   } catch (error) {
     console.error("Failed to load tools by category:", error);
-    const toolsData = await getToolsData(lang);
+    const toolsData = await getToolsData();
     return toolsData.tools.filter((tool) => tool.category === category);
   }
 }
 
-export async function searchTools(keyword: string, lang?: string): Promise<AITool[]> {
+export async function searchTools(keyword: string): Promise<AITool[]> {
   try {
     const params = new URLSearchParams({ keyword });
-    if (lang) params.set("lang", lang);
-    const response = await fetch(
+    const response = await fetchWithLocale(
       `${API_URL}/api/tools/search?${params.toString()}`
     );
     const data = await response.json();
@@ -84,23 +83,13 @@ export async function searchTools(keyword: string, lang?: string): Promise<AIToo
   }
 }
 
-export async function getToolDetail(id: string, lang?: string): Promise<ToolWithDetail | null> {
+export async function getToolDetail(id: string): Promise<ToolWithDetail | null> {
   try {
-    const params = new URLSearchParams();
-    if (lang) params.set("lang", lang);
-    const query = params.toString();
-    const url = query
-      ? `${API_URL}/api/tools/${id}/detail?${query}`
-      : `${API_URL}/api/tools/${id}/detail`;
-
-    const response = await fetch(url, {
-      cache: "no-store",
-    });
+    const response = await fetchWithLocale(`${API_URL}/api/tools/${id}/detail`);
     if (!response.ok) {
       return null;
     }
     const data = await response.json();
-    // API 返回 {tool: {...}, detail: {...}}，合并为扁平结构
     return { ...data.tool, detail: data.detail } as ToolWithDetail;
   } catch (error) {
     console.error("Failed to load tool detail:", error);
