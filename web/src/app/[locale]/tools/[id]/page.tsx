@@ -1,5 +1,6 @@
 import { getToolDetail } from "@/lib/data";
 import { ToolDetailPage } from "@/components/tools/tool-detail";
+import { Sidebar } from "@/components/layout/sidebar";
 import { notFound } from "next/navigation";
 
 interface PageProps {
@@ -7,12 +8,19 @@ interface PageProps {
 }
 
 export default async function ToolPage({ params }: PageProps) {
-  const { locale, id } = await params;
+  const { id } = await params;
   const tool = await getToolDetail(id);
 
   if (!tool) {
     notFound();
   }
 
-  return <ToolDetailPage tool={tool} />;
+  return (
+    <div className="flex min-h-screen bg-gray-50">
+      <Sidebar />
+      <main className="flex-1 p-8">
+        <ToolDetailPage tool={tool} />
+      </main>
+    </div>
+  );
 }
