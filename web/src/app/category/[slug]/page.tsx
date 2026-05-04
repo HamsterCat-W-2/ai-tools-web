@@ -5,16 +5,11 @@ import { getCategoryLabel } from "@/lib/categories";
 import { Sidebar } from "@/components/layout/sidebar";
 import { ToolsWithSearch } from "@/components/tools/tools-with-search";
 
+export const dynamic = "force-dynamic";
+
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ lang?: string }>;
-}
-
-export async function generateStaticParams() {
-  const categories = await getCategories();
-  return categories.map((category) => ({
-    slug: category,
-  }));
 }
 
 export async function generateMetadata({
