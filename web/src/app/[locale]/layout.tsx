@@ -2,6 +2,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { Header } from "@/components/layout/header";
 import type { Metadata } from "next";
 
 export function generateStaticParams() {
@@ -41,6 +42,7 @@ export default async function LocaleLayout({
     <html lang={locale} className="h-full antialiased">
       <body className="min-h-full flex flex-col font-sans">
         <NextIntlClientProvider messages={messages}>
+          <Header />
           {children}
         </NextIntlClientProvider>
       </body>
