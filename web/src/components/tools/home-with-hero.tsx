@@ -19,7 +19,7 @@ export function HomeWithHero({ tools, categories, sidebar }: HomeWithHeroProps) 
       <Hero search={search} onSearchChange={setSearch} />
       <div className="flex bg-background">
         {sidebar}
-        <main className="flex-1 p-8" id="main-content">
+        <main className="flex-1 p-4 md:p-8" id="main-content">
           <div className="max-w-6xl mx-auto">
             <HomeContent tools={tools} categories={categories} search={search} />
           </div>

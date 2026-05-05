@@ -18,7 +18,7 @@ export default async function ToolPage({ params }: PageProps) {
   return (
     <div className="flex bg-background">
       <Sidebar />
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-4 md:p-8">
         <ToolDetailPage tool={tool} />
       </main>
     </div>

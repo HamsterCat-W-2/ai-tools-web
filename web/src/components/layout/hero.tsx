@@ -12,7 +12,7 @@ export function Hero({ search, onSearchChange }: HeroProps) {
   const tSearch = useTranslations("Search");
 
   return (
-    <section className="hero">
+    <section className="hero px-4 md:px-6">
       <div className="max-w-3xl mx-auto text-center">
         {/* Accent line */}
         <div className="flex justify-center mb-6">
@@ -68,7 +68,7 @@ export function Hero({ search, onSearchChange }: HeroProps) {
 
         {/* Stats */}
         <div
-          className="flex justify-center gap-8 mt-10"
+          className="flex justify-center gap-4 md:gap-8 mt-10"
           style={{ animation: "fadeInUp 0.6s ease-out 0.3s both" }}
         >
           <div className="text-center">

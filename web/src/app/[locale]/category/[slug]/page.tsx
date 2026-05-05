@@ -38,7 +38,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   return (
     <div className="flex bg-background">
       <Sidebar currentCategory={slug} />
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-4 md:p-8">
         <div className="max-w-6xl mx-auto">
           <h1 className="heading-display text-2xl text-foreground mb-8">
             {label}
