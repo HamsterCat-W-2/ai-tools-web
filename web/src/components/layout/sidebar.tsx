@@ -13,7 +13,7 @@ export async function Sidebar({ currentCategory }: SidebarProps) {
   const categories = await getCategories();
 
   return (
-    <aside className="w-56 bg-sidebar-bg border-r border-border min-h-screen shrink-0">
+    <aside className="w-56 bg-sidebar-bg border-r border-border shrink-0 sticky top-[60px] h-[calc(100vh-60px)] overflow-y-auto">
       <nav className="p-5 pt-6">
         <h3 className="text-[10px] font-semibold text-text-muted uppercase tracking-[0.15em] mb-4 px-3">
           {t("categoryNav")}

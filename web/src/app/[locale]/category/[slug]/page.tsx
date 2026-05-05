@@ -36,7 +36,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const label = getCategoryLabel(slug, locale);
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex bg-background">
       <Sidebar currentCategory={slug} />
       <main className="flex-1 p-8">
         <div className="max-w-6xl mx-auto">
