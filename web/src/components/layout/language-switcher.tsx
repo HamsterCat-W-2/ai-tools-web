@@ -18,16 +18,16 @@ export function LanguageSwitcher() {
   };
 
   return (
-    <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
-      {languages.map((lang) => (
+    <div className="flex items-center gap-0">
+      {languages.map((lang, i) => (
         <button
           key={lang.code}
           onClick={() => handleSwitch(lang.code)}
-          className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+          className={`px-2.5 py-1 text-[11px] tracking-wide transition-colors ${
             locale === lang.code
-              ? "bg-white text-gray-900 shadow-sm"
-              : "text-gray-500 hover:text-gray-700"
-          }`}
+              ? "text-accent font-semibold"
+              : "text-text-muted hover:text-text-secondary"
+          } ${i > 0 ? "border-l border-border" : ""}`}
         >
           {lang.label}
         </button>

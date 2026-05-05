@@ -1,23 +1,22 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { AITool } from "@/types/tool";
 import { getCategoryLabel } from "@/lib/categories";
-import { SearchInput } from "@/components/ui/search-input";
 import { ToolsGrid } from "@/components/tools/tools-grid";
 
 interface HomeContentProps {
   tools: AITool[];
   categories: string[];
+  search: string;
 }
 
-export function HomeContent({ tools, categories }: HomeContentProps) {
+export function HomeContent({ tools, categories, search }: HomeContentProps) {
   const t = useTranslations("HomeContent");
   const tSearch = useTranslations("Search");
   const locale = useLocale();
-  const [search, setSearch] = useState("");
 
   const filteredTools = useMemo(() => {
     if (!search) return tools;
@@ -34,8 +33,7 @@ export function HomeContent({ tools, categories }: HomeContentProps) {
   if (search) {
     return (
       <div className="space-y-6">
-        <SearchInput value={search} onChange={setSearch} className="max-w-xl" />
-        <p className="text-gray-500">
+        <p className="text-text-muted text-sm">
           {tSearch("searchPrefix", { query: search })}
           {tSearch("resultCount", { count: filteredTools.length })}
         </p>
@@ -51,15 +49,14 @@ export function HomeContent({ tools, categories }: HomeContentProps) {
   }));
 
   return (
-    <div className="space-y-10">
-      <SearchInput value={search} onChange={setSearch} className="max-w-xl" />
+    <div className="space-y-14">
       {groupedTools.map(({ category, label, tools: categoryTools }) => (
         <section key={category}>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-900">{label}</h2>
+          <div className="flex items-baseline justify-between mb-5">
+            <h2 className="heading-section text-xl text-foreground">{label}</h2>
             <Link
               href={`/category/${category}`}
-              className="text-sm text-blue-600 hover:text-blue-800"
+              className="text-[12px] text-text-muted hover:text-accent transition-colors tracking-wide uppercase"
             >
               {t("viewAll")} &rarr;
             </Link>

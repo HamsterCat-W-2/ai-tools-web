@@ -18,39 +18,39 @@ export function ToolCard({ tool, className }: ToolCardProps) {
     <Link
       href={`/tools/${tool.id}`}
       className={cn(
-        "block bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg hover:border-blue-300 transition-all duration-200",
+        "glass-card group block p-5 h-full",
         className
       )}
     >
-      <div className="flex items-start gap-4">
+      <div className="flex items-start gap-3.5">
         {tool.icon && (
           <img
             src={tool.icon}
             alt={tool.name}
-            className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
+            className="w-10 h-10 rounded-lg object-cover flex-shrink-0 border border-border"
             onError={(e) => {
               (e.target as HTMLImageElement).style.display = "none";
             }}
           />
         )}
         <div className="flex-1 min-w-0">
-          <h3 className="text-lg font-semibold text-gray-900 truncate">
+          <h3 className="text-[15px] font-semibold text-foreground truncate group-hover:text-accent transition-colors duration-200">
             {tool.name}
           </h3>
-          <p className="mt-1 text-sm text-gray-500 line-clamp-2">
+          <p className="mt-1 text-[13px] text-text-secondary leading-relaxed line-clamp-2">
             {tool.description}
           </p>
         </div>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+      <div className="mt-3.5 flex flex-wrap gap-1.5">
+        <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-semibold bg-category-badge-bg text-category-badge-text tracking-wider uppercase">
           {getCategoryLabel(tool.category, locale)}
         </span>
         {tool.tags.slice(0, 3).map((tag) => (
           <span
             key={tag}
-            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700"
+            className="inline-flex items-center px-2 py-0.5 text-[10px] bg-badge-bg text-badge-text tracking-wide"
           >
             {tag}
           </span>
@@ -58,10 +58,10 @@ export function ToolCard({ tool, className }: ToolCardProps) {
       </div>
 
       {tool.features.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <div className="flex flex-wrap gap-2">
+        <div className="mt-3.5 pt-3 border-t border-border">
+          <div className="flex flex-wrap gap-x-3 gap-y-1">
             {tool.features.slice(0, 3).map((feature) => (
-              <span key={feature} className="text-xs text-gray-500">
+              <span key={feature} className="text-[11px] text-text-muted">
                 {feature}
               </span>
             ))}

@@ -25,10 +25,10 @@ export function CategoryFilter({
       <button
         onClick={() => onChange("")}
         className={cn(
-          "px-4 py-2 rounded-full text-sm font-medium transition-colors",
+          "px-3.5 py-1.5 text-xs font-medium tracking-wide transition-all duration-200",
           selected === ""
-            ? "bg-blue-600 text-white"
-            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            ? "bg-accent text-background shadow-[0_0_12px_rgba(0,212,255,0.3)]"
+            : "bg-surface-elevated text-text-secondary border border-border hover:border-border-hover hover:text-foreground"
         )}
       >
         {t("all")}
@@ -38,10 +38,10 @@ export function CategoryFilter({
           key={category}
           onClick={() => onChange(category)}
           className={cn(
-            "px-4 py-2 rounded-full text-sm font-medium transition-colors",
+            "px-3.5 py-1.5 text-xs font-medium tracking-wide transition-all duration-200",
             selected === category
-              ? "bg-blue-600 text-white"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              ? "bg-accent text-background shadow-[0_0_12px_rgba(0,212,255,0.3)]"
+              : "bg-surface-elevated text-text-secondary border border-border hover:border-border-hover hover:text-foreground"
           )}
         >
           {getCategoryLabel(category, locale)}

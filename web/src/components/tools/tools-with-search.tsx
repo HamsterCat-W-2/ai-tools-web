@@ -28,8 +28,8 @@ export function ToolsWithSearch({ tools }: ToolsWithSearchProps) {
 
   return (
     <div className="space-y-6">
-      <SearchInput value={search} onChange={setSearch} className="max-w-xl" />
-      <p className="text-gray-500">
+      <SearchInput value={search} onChange={setSearch} className="max-w-lg" />
+      <p className="text-text-muted text-sm">
         {search ? t("searchPrefix", { query: search }) : ""}
         {t("toolCount", { count: filteredTools.length })}
       </p>

@@ -36,11 +36,13 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const label = getCategoryLabel(slug, locale);
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-background">
       <Sidebar currentCategory={slug} />
       <main className="flex-1 p-8">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">{label}</h1>
+        <div className="max-w-6xl mx-auto">
+          <h1 className="heading-display text-2xl text-foreground mb-8">
+            {label}
+          </h1>
           <ToolsWithSearch tools={tools} />
         </div>
       </main>

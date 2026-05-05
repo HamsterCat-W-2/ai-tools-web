@@ -39,8 +39,8 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className="h-full antialiased">
-      <body className="min-h-full flex flex-col font-sans">
+    <html lang={locale} className="h-full">
+      <body className="min-h-full flex flex-col">
         <NextIntlClientProvider messages={messages}>
           <Header />
           {children}
