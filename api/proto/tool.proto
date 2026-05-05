@@ -1,0 +1,128 @@
+syntax = "proto3";
+
+package tool;
+
+option go_package = "ai-tools-api/proto";
+
+import "google/api/annotations.proto";
+
+// 工具服务
+service ToolService {
+  // 获取工具列表
+  rpc GetTools(GetToolsRequest) returns (GetToolsResponse) {
+    option (google.api.http) = {
+      get: "/api/tools"
+    };
+  }
+  // 获取单个工具
+  rpc GetTool(GetToolRequest) returns (Tool) {
+    option (google.api.http) = {
+      get: "/api/tools/{id}"
+    };
+  }
+  // 获取分类列表
+  rpc GetCategories(GetCategoriesRequest) returns (GetCategoriesResponse) {
+    option (google.api.http) = {
+      get: "/api/categories"
+    };
+  }
+  // 搜索工具
+  rpc SearchTools(SearchToolsRequest) returns (SearchToolsResponse) {
+    option (google.api.http) = {
+      get: "/api/tools/search"
+    };
+  }
+  // 获取工具详情
+  rpc GetToolDetail(GetToolDetailRequest) returns (GetToolDetailResponse) {
+    option (google.api.http) = {
+      get: "/api/tools/{id}/detail"
+    };
+  }
+}
+
+// 工具信息
+message Tool {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string url = 4;
+  string category = 5;
+  string icon = 6;
+  repeated string tags = 7;
+  repeated string features = 8;
+  string crawled_at = 9;
+  string created_at = 10;
+  string updated_at = 11;
+  string detail_url = 12;
+  string pricing = 13;
+}
+
+// 获取工具列表请求
+message GetToolsRequest {
+  string category = 1;
+  string lang = 2;
+}
+
+// 获取工具列表响应
+message GetToolsResponse {
+  repeated Tool tools = 1;
+  repeated string categories = 2;
+  int32 total = 3;
+  string last_updated = 4;
+}
+
+// 获取单个工具请求
+message GetToolRequest {
+  string id = 1;
+  string lang = 2;
+}
+
+// 获取分类列表请求
+message GetCategoriesRequest {}
+
+// 获取分类列表响应
+message GetCategoriesResponse {
+  repeated string categories = 1;
+}
+
+// 搜索工具请求
+message SearchToolsRequest {
+  string keyword = 1;
+  string lang = 2;
+}
+
+// 搜索工具响应
+message SearchToolsResponse {
+  repeated Tool tools = 1;
+  int32 total = 2;
+}
+
+// FAQ 条目
+message FAQItem {
+  string question = 1;
+  string answer = 2;
+}
+
+// 工具详情信息
+message ToolDetail {
+  string tool_id = 1;
+  string content_html = 2;
+  repeated string screenshots = 3;
+  string pricing = 4;
+  repeated FAQItem faq = 5;
+  int32 like_count = 6;
+  int32 comment_count = 7;
+  string published_at = 8;
+}
+
+// 获取工具详情请求
+message GetToolDetailRequest {
+  string id = 1;
+  string lang = 2;
+}
+
+// 获取工具详情响应
+message GetToolDetailResponse {
+  Tool tool = 1;
+  ToolDetail detail = 2;
+}

@@ -1,0 +1,55 @@
+{
+  "Metadata": {
+    "title": "AI Tools - AI Tools Navigation",
+    "description": "Discover the best AI tools, featuring ChatGPT, Midjourney and more"
+  },
+  "Home": {
+    "allTools": "All Tools"
+  },
+  "Category": {
+    "chatbot": "AI Chat",
+    "image": "AI Image",
+    "coding": "AI Coding",
+    "writing": "AI Writing",
+    "video": "AI Video",
+    "audio": "AI Audio",
+    "design": "AI Design",
+    "office": "AI Office",
+    "search": "AI Search",
+    "other": "Other"
+  },
+  "Sidebar": {
+    "subtitle": "AI Tools Navigation",
+    "categoryNav": "Categories",
+    "allTools": "All Tools"
+  },
+  "Search": {
+    "placeholder": "Search AI tools...",
+    "searchPrefix": "Search \"{query}\" - ",
+    "toolCount": "{count, plural, =0 {No tools} one {# tool} other {# tools}}",
+    "resultCount": "{count, plural, =0 {No results} one {# result} other {# results}}"
+  },
+  "ToolsGrid": {
+    "noResults": "No matching AI tools found"
+  },
+  "HomeContent": {
+    "viewAll": "View all"
+  },
+  "ToolDetail": {
+    "backToHome": "Back to home",
+    "screenshots": "Screenshots",
+    "screenshotAlt": "{name} screenshot {index}",
+    "detailedIntro": "Detailed Introduction",
+    "faq": "FAQ",
+    "visitWebsite": "Visit Website",
+    "noDetail": "No detailed information available"
+  },
+  "CategoryFilter": {
+    "all": "All"
+  },
+  "Header": {
+    "title": "AI Tools",
+    "subtitle": "Discover the best AI tools",
+    "poweredBy": "Powered by AI-Bot.cn"
+  }
+}

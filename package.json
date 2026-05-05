@@ -1,0 +1,13 @@
+{
+  "name": "ai-tools-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI工具集导航网站",
+  "scripts": {
+    "dev:web": "cd web && npm run dev",
+    "build:web": "cd web && npm run build",
+    "start:web": "cd web && npm start",
+    "crawl": "cd crawler && python run.py",
+    "install:all": "npm install && cd web && npm install && cd ../crawler && pip install -r requirements.txt"
+  }
+}

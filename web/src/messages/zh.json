@@ -1,0 +1,55 @@
+{
+  "Metadata": {
+    "title": "AI Tools - AI工具集导航",
+    "description": "发现最好用的AI工具，收录ChatGPT、Midjourney等热门AI应用"
+  },
+  "Home": {
+    "allTools": "全部工具"
+  },
+  "Category": {
+    "chatbot": "AI聊天",
+    "image": "AI绘画",
+    "coding": "AI编程",
+    "writing": "AI写作",
+    "video": "AI视频",
+    "audio": "AI音频",
+    "design": "AI设计",
+    "office": "AI办公",
+    "search": "AI搜索",
+    "other": "其他"
+  },
+  "Sidebar": {
+    "subtitle": "AI工具集导航",
+    "categoryNav": "分类导航",
+    "allTools": "全部工具"
+  },
+  "Search": {
+    "placeholder": "搜索AI工具...",
+    "searchPrefix": "搜索 \"{query}\" - ",
+    "toolCount": "共 {count} 个工具",
+    "resultCount": "共 {count} 个结果"
+  },
+  "ToolsGrid": {
+    "noResults": "没有找到匹配的AI工具"
+  },
+  "HomeContent": {
+    "viewAll": "查看全部"
+  },
+  "ToolDetail": {
+    "backToHome": "返回首页",
+    "screenshots": "截图",
+    "screenshotAlt": "{name} 截图 {index}",
+    "detailedIntro": "详细介绍",
+    "faq": "常见问题",
+    "visitWebsite": "访问官网",
+    "noDetail": "暂无详细信息"
+  },
+  "CategoryFilter": {
+    "all": "全部"
+  },
+  "Header": {
+    "title": "AI Tools",
+    "subtitle": "发现最好用的AI工具",
+    "poweredBy": "Powered by AI-Bot.cn"
+  }
+}

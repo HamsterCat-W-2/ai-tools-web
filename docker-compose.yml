@@ -1,0 +1,96 @@
+services:
+  # MySQL 数据库
+  mysql:
+    image: mysql:8.0
+    container_name: ai-tools-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: ai_tools
+      MYSQL_USER: ai_tools
+      MYSQL_PASSWORD: ai_tools123
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+
+  # MinIO 文件存储
+  minio:
+    image: minio/minio:latest
+    container_name: ai-tools-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+
+  # Storage 服务 (Node.js - 文件上传)
+  storage:
+    build:
+      context: ./storage
+      dockerfile: Dockerfile
+    container_name: ai-tools-storage
+    ports:
+      - "9100:9100"
+    environment:
+      STORAGE_PORT: 9100
+      MINIO_ENDPOINT: minio
+      MINIO_PORT: 9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin123
+      MINIO_BUCKET: ai-tools
+      MINIO_PUBLIC_URL: http://localhost:9000
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: ai_tools
+      MYSQL_USER: ai_tools
+      MYSQL_PASSWORD: ai_tools123
+    depends_on:
+      - minio
+      - mysql
+    restart: unless-stopped
+
+  # API 服务 (Go - gRPC + HTTP)
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: ai-tools-api
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      GRPC_PORT: 8080
+      HTTP_PORT: 8081
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: ai_tools
+      MYSQL_USER: ai_tools
+      MYSQL_PASSWORD: ai_tools123
+    depends_on:
+      - mysql
+    restart: unless-stopped
+
+  # Web 前端 (Next.js)
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: ai-tools-web
+    ports:
+      - "3000:3000"
+    environment:
+      API_URL: http://api:8081
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  minio_data:
+  mysql_data:
