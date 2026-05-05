@@ -275,6 +275,50 @@ body {
 }
 
 /* ═══════════════════════════════════════════════
+   DETAIL HERO
+   ═══════════════════════════════════════════════ */
+
+.detail-hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 400px 250px at 30% 50%, rgba(0, 212, 255, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 300px 200px at 80% 30%, rgba(124, 58, 237, 0.04) 0%, transparent 70%);
+  z-index: 0;
+}
+
+.detail-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══════════════════════════════════════════════
+   MOBILE FIXED CTA
+   ═══════════════════════════════════════════════ */
+
+.mobile-cta-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ═══════════════════════════════════════════════
    FOCUS STYLES
    ═══════════════════════════════════════════════ */
 
